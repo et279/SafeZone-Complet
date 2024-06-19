@@ -1,0 +1,19 @@
+.header{
+    /* Styles for {{pascalCase name}} */
+    position: absolute;
+    top: 0;
+    left: 0;
+    
+    background-color: aliceblue;
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 100%;
+    max-height: 10%;
+
+    margin: 0;
+    z-index: 2;
+  }
+  
