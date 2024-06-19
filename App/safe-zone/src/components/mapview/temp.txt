@@ -1,0 +1,41 @@
+import React, { useEffect, useState } from 'react';
+import { MapContainer, TileLayer, Polygon } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
+import axios from 'axios';
+import { Zone } from '../../types/Zone';
+import Polygons from '../../types/Polygons';
+
+
+
+const MapView: React.FC = () => {
+  // const [zones, setZones] = useState<Zone[]>([]);
+
+  // useEffect(() => {
+  //   axios.get('http://localhost:3000/zones')
+  //     .then((response: { data: React.SetStateAction<Zone[]>; }) => {
+  //       setZones(response.data);
+  //     })
+  //     .catch((error: any) => {
+  //       console.error("There was an error fetching the zones!", error);
+  //     });
+  // }, []);
+
+  // console.log(zones);
+  // console.log(zones.length);
+  // const perimeterCoordinates = zones.flatMap(zone => zone.coordinates.map(coord => [coord.lat, coord.lng])) as any[];
+  
+  
+  return (
+    <MapContainer center={[6.167016821486245, -75.5803951265431]} zoom={13} style={{ height: "100vh", width: "100%" }}>
+      <TileLayer
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+      />
+      
+      <Polygons/>
+      {/* <Polygon positions={perimeterCoordinates} /> */}
+      
+    </MapContainer>
+  );
+};
+
+export default MapView;
