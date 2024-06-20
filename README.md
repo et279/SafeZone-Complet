@@ -23,21 +23,21 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/tu-usuario/SafeZone-Complet">
+  <a href="https://github.com/et279/SafeZone-Complet">
     <img src="App/safe-zone/src/assets/logo-green.png" alt="Logo" width="80" height="80">
   </a>
 <h3 align="center">SafeZone-Complet</h3>
   <p align="center">
     Una aplicación web para visualizar zonas restringidas de consumo de marihuana según la normativa de la Alcaldía de Envigado.
     <br />
-    <a href="https://github.com/tu-usuario/SafeZone-Complet"><strong>Explora la documentación »</strong></a>
+    <a href="https://github.com/et279/SafeZone-Complet"><strong>Explora la documentación »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/tu-usuario/SafeZone-Complet">Ver Demo</a>
+    <a href="https://github.com/et279/SafeZone-Complet">Ver Demo</a>
     ·
-    <a href="https://github.com/tu-usuario/SafeZone-Complet/issues/new?labels=bug&template=bug-report---.md">Reportar Bug</a>
+    <a href="https://github.com/et279/SafeZone-Complet/issues/new?labels=bug&template=bug-report---.md">Reportar Bug</a>
     ·
-    <a href="https://github.com/tu-usuario/SafeZone-Complet/issues/new?labels=enhancement&template=feature-request---.md">Solicitar Funcionalidad</a>
+    <a href="https://github.com/et279/SafeZone-Complet/issues/new?labels=enhancement&template=feature-request---.md">Solicitar Funcionalidad</a>
   </p>
 </div>
 <!-- TABLE OF CONTENTS -->
@@ -70,7 +70,7 @@ Sobre el Proyecto
 
 SafeZone-Complet es una aplicación web diseñada para proyectar un mapa interactivo con diversas capas que representan zonas y ubicaciones específicas, como hospitales, parques, colegios, y otras áreas comunes. Estas capas están basadas en los decretos de la Alcaldía de Envigado sobre el consumo regulado de sustancias, especialmente marihuana, para la protección de la infancia.
 
-<p align="right">(<a href="#readme-top">volver arriba</a>)</p>
+
 Construido con
 MongoDB
 Realm
@@ -78,7 +78,7 @@ Boost
 Next.js
 React.js
 Bootstrap
-<p align="right">(<a href="#readme-top">volver arriba</a>)</p>
+
 <!-- GETTING STARTED -->
 Empezando
 Para obtener una copia local en funcionamiento, sigue estos sencillos pasos.
@@ -91,7 +91,7 @@ Clona el repositorio
 
 sh
 Copiar código
-git clone https://github.com/tu-usuario/SafeZone-Complet.git
+git clone https://github.com/et279/SafeZone-Complet.git
 cd SafeZone-Complet
 Instala las dependencias
 
@@ -117,12 +117,12 @@ Copiar código
 npm start
 La aplicación estará disponible en http://localhost:3000.
 
-<p align="right">(<a href="#readme-top">volver arriba</a>)</p>
+
 <!-- USAGE EXAMPLES -->
 Uso
 Actualmente, la aplicación permite visualizar un mapa interactivo con capas superpuestas que representan los decretos de la alcaldía. Los usuarios pueden ver en qué zonas se puede o no consumir, así como las zonas protegidas y otros datos relevantes.
 
-<p align="right">(<a href="#readme-top">volver arriba</a>)</p>
+
 <!-- ROADMAP -->
 Hoja de Ruta
  Implementación del mapa interactivo
@@ -130,7 +130,7 @@ Hoja de Ruta
  Funcionalidades administrativas avanzadas
 Ver issues abiertos para una lista completa de tareas propuestas (y problemas conocidos).
 
-<p align="right">(<a href="#readme-top">volver arriba</a>)</p>
+
 <!-- CONTRIBUTING -->
 Contribuir
 Las contribuciones son lo que hace que la comunidad de código abierto sea un lugar increíble para aprender, inspirar y crear. Cualquier contribución que hagas será muy apreciada.
@@ -142,19 +142,19 @@ Crea tu Feature Branch (git checkout -b feature/AmazingFeature)
 Realiza Commit de tus Cambios (git commit -m 'Add some AmazingFeature')
 Realiza Push a la Rama (git push origin feature/AmazingFeature)
 Abre una Pull Request
-<p align="right">(<a href="#readme-top">volver arriba</a>)</p>
+
 <!-- LICENSE -->
 Licencia
 Distribuido bajo la licencia MIT. Ver LICENSE.txt para más información.
 
-<p align="right">(<a href="#readme-top">volver arriba</a>)</p>
+
 <!-- CONTACT -->
 Contacto
 Tu Nombre - @et279 - fabianbeltranrojas279@gmail.com
 
 Enlace del Proyecto: https://github.com/et279/SafeZone-Complet
 
-<p align="right">(<a href="#readme-top">volver arriba</a>)</p>
+
 <!-- ACKNOWLEDGMENTS -->
 Agradecimientos
 Img Shields
@@ -162,6 +162,8 @@ Choose an Open Source License
 GitHub Pages
 Font Awesome
 React Icons
+
+
 <p align="right">(<a href="#readme-top">volver arriba</a>)</p>
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
