@@ -1,0 +1,8 @@
+@import './styles/variables.css';
+@import './styles/global.css';
+
+/* Otros estilos globales */
+#root{
+  height: 90vh;
+  max-height: 90vh;
+}

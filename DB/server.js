@@ -12,9 +12,11 @@ mongoose.connect(process.env.MONGODB_URI, {
 }).then(() => console.log('MongoDB connected'))
   .catch(err => console.log(err));
 
-// Configurar CORS para permitir solicitudes desde http://localhost:5173
+// Configurar CORS para permitir solicitudes desde http://localhost:5173 y http://localhost:3001
 app.use(cors({
-  origin: 'http://localhost:5173',
+  origin: ['http://localhost:5173','http://localhost:3001','http://localhost:5174'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true
 }));
 
 app.use(express.json());

@@ -1,0 +1,34 @@
+.container {
+    margin-top: 70px; /* Ajustar si es necesario */
+  }
+  
+  h2 {
+    margin-top: 20px;
+  }
+  
+  .list-group-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .map-container {
+    height: 100vh;
+  }
+  
+  .border-right {
+    border-right: 1px solid #ddd;
+  }
+  
+  .p-0 {
+    padding: 0 !important;
+  }
+  
+  .h-100 {
+    height: 100vh;
+  }
+  
+  .container-fluid {
+    padding-top: 56px;
+  }
+  
