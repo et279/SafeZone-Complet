@@ -6,6 +6,7 @@ import * as turf from '@turf/turf';
 import 'leaflet/dist/leaflet.css';
 import './PerimeterInterface.css';
 import { Site, PolygonData } from '../../types/types';
+import { DEFAULT_MAP_ZOOM, DEFAULT_MAP_CENTER, DATABASE_URL} from '../../types/variables';
 
 const PerimeterInterface: React.FC = () => {
   const [sites, setSites] = useState<Site[]>([]);
@@ -13,15 +14,15 @@ const PerimeterInterface: React.FC = () => {
   const [selectedSitesList, setSelectedSitesList] = useState<Site[]>([]);
   const [polygons, setPolygons] = useState<PolygonData[]>([]);
   const [generatedBuffers, setGeneratedBuffers] = useState<boolean>(false);
-  const [mapCenter, setMapCenter] = useState<[number, number]>([6.175, -75.591]);
-  const [mapZoom, setMapZoom] = useState<number>(13);
+  const [mapCenter, setMapCenter] = useState<[number, number]>(DEFAULT_MAP_CENTER);
+  const [mapZoom, setMapZoom] = useState<number>(DEFAULT_MAP_ZOOM);
 
   useEffect(() => {
-    axios.get<Site[]>('http://localhost:3000/zones')
+    axios.get<Site[]>(DATABASE_URL)
       .then(response => setSites(response.data))
       .catch(error => console.error('Error fetching zones:', error));
   }, []);
-
+  // agregar sitios a la lista
   const handleAddSite = () => {
     if (selectedSite && !selectedSitesList.some(site => site._id === selectedSite)) {
       const siteToAdd = sites.find(site => site._id === selectedSite);
@@ -49,12 +50,12 @@ const PerimeterInterface: React.FC = () => {
         if (siteToAdd.coordinates.length > 0) {
           const firstCoordinate = siteToAdd.coordinates[0];
           setMapCenter([firstCoordinate.lat, firstCoordinate.lng]);
-          setMapZoom(15); // Ajusta el zoom al agregar un sitio
+          setMapZoom(DEFAULT_MAP_ZOOM); // Ajusta el zoom al agregar un sitio
         }
       }
     }
   };
-
+  //eliminar sitios de la lista
   const handleRemoveSite = (siteToRemove: Site) => {
     setSelectedSitesList(selectedSitesList.filter(site => site._id !== siteToRemove._id));
     setPolygons(polygons.filter(polygon => polygon.siteId !== siteToRemove._id));
@@ -63,17 +64,17 @@ const PerimeterInterface: React.FC = () => {
     if (siteToRemove.coordinates.length > 0) {
       const firstCoordinate = siteToRemove.coordinates[0];
       setMapCenter([firstCoordinate.lat, firstCoordinate.lng]);
-      setMapZoom(15); // Ajusta el zoom al eliminar un sitio
+      setMapZoom(16); // Ajusta el zoom al eliminar un sitio
     } else {
       setMapCenter([6.175, -75.591]); // Ubicación por defecto si no hay coordenadas
-      setMapZoom(13); // Zoom por defecto
+      setMapZoom(16); // Zoom por defecto
     }
     
     // Actualizar el estado de generatedBuffers
     const hasBuffers = polygons.some(polygon => polygon.color === 'red' && polygon.siteId === siteToRemove._id);
     setGeneratedBuffers(hasBuffers);
   };
-
+  // Generar los buffers
   const handleGenerateBuffer = () => {
     const newPolygons = selectedSitesList.map(site => {
       const coordinates = site.coordinates.map(coord => [coord.lng, coord.lat]);
@@ -99,23 +100,23 @@ const PerimeterInterface: React.FC = () => {
     setPolygons([...polygons, ...newPolygons]);
     setGeneratedBuffers(true);
   };
-  
-
+  // Guardar buffer
   const handleSaveBuffers = () => {
     selectedSitesList.forEach(site => {
-      const bufferedPolygon = polygons.find(polygon => polygon.siteId === site._id && polygon.color === 'red');
-      if (bufferedPolygon) {
-        axios.post(`http://localhost:3000/zones/generate-perimeter/${site._id}`, {
-          coordinatesrestriction: bufferedPolygon.coordinates.map(coord => ({
-            lat: coord[0],
-            lng: coord[1]
-          }))
-        })
-        .then(response => console.log('Buffer saved for site:', site.name))
-        .catch(error => console.error('Error saving buffer:', error));
-      }
+        const bufferedPolygon = polygons.find(polygon => polygon.siteId === site._id && polygon.color === 'red');
+        if (bufferedPolygon) {
+            axios.post(`${DATABASE_URL}/save-restriction-coordinates/${site._id}`, {
+                restrictionCoordinates: bufferedPolygon.coordinates.map(coord => ({
+                    lat: coord[0],
+                    lng: coord[1]
+                }))
+            })
+            .then(response => console.log('Buffer saved for site:', site.name))
+            .catch(error => console.error('Error saving buffer:', error));
+        }
     });
-  };
+};
+
 
   const MapEffect: React.FC<{ center: [number, number], zoom: number }> = ({ center, zoom }) => {
     const map = useMap();
@@ -159,7 +160,7 @@ const PerimeterInterface: React.FC = () => {
             </Row>
           </Form>
           <h2>Sitios Seleccionados</h2>
-          <ListGroup>
+          <ListGroup  >
             {selectedSitesList.map((site) => (
               <ListGroup.Item key={site._id} onClick={() => setSelectedSite(site._id)}>
                 {site.name}

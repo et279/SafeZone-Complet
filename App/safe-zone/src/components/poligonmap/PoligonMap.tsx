@@ -2,7 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { Polygon, Popup} from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { fetchZones, generatePolygons } from '../../types/polygonLogic';
-import { Restriction, Zone, } from '../../types/Zone';
+import { Coordinate, Restriction, Zone, } from '../../types/Zone';
+import * as turf from '@turf/turf';
+
+
 
 const PolygonMap: React.FC = () => {
   const [polygons, setPolygons] = useState<{ name: string; coordinates: number[][];    restriction: Restriction;  coordinatesrestriction: number[][] }[]>([]);
@@ -18,7 +21,8 @@ const PolygonMap: React.FC = () => {
     loadPolygons();
   }, []);
 //   console.log('poligons',polygons);
-  
+
+
   return (
           polygons.map((polygon, index) => (
             <React.Fragment key={index}>

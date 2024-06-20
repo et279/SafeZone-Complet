@@ -28,6 +28,7 @@ const NavigationBar: React.FC = () => {
             <Nav className="me-auto">
               <Nav.Link as={Link} to="/">Home</Nav.Link>
               <Nav.Link as={Link} to="/perimeter-interface">Perimetros</Nav.Link>
+              <Nav.Link as={Link} to="/site-form">Sitios</Nav.Link>
               {/* Añade más enlaces según sea necesario */}
             </Nav>
           </Navbar.Collapse>
