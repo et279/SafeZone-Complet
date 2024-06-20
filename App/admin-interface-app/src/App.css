@@ -1,0 +1,12 @@
+.b-w-button{
+  position: fixed;
+  top: 1rem;
+  right: 10px;
+  z-index: 1000;
+}
+.on{
+  fill: ghostwhite;
+}
+.off{
+  fill: black;
+}

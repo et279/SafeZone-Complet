@@ -1,0 +1,21 @@
+.custom-navbar {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: var(--primary-color) !important;
+    padding: 1rem 2rem;
+    z-index: 90;
+    max-height: 10vh;
+    height: 8vh;
+  }
+  
+  .custom-navbar .navbar-brand img {
+    margin-right: 10px;
+  }
+  
+  .custom-navbar .navbar-brand {
+    color: var(--text-color) !important;
+  }
+  
+  .custom-navbar .navbar-nav .nav-link {
+    color: var(--text-color) !important;
+  }
+  

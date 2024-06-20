@@ -1,0 +1,14 @@
+body {
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
+
+button, .btn {
+  background-color: var(--primary-color);
+  color: var(--text-color);
+}
+
+.navbar, .navbar-dark .navbar-nav .nav-link {
+  background-color: var(--primary-color);
+  color: var(--text-color);
+}
