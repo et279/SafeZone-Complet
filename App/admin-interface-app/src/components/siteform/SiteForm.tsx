@@ -4,13 +4,25 @@ import axios from 'axios';
 import { DATABASE_URL } from '../../types/variables';
 import { Site, SiteType } from '../../types/types';
 
-// Función para parsear coordenadas desde string a array de objetos
 const parseCoordinates = (coords: string): { lat: number, lng: number }[] => {
-  return coords.split('\n').map(coord => {
-    const [lat, lng] = coord.split(',').map(Number);
-    return { lat, lng };
-  });
+  // Eliminar todas las comas y reducir espacios múltiples a uno solo
+  const cleanedString = coords.replace(/,/g, '').replace(/\s+/g, ' ').trim();
+  console.log(cleanedString);
+  
+  // Dividir el string en números
+  const numbers = cleanedString.split(' ').map(Number);
+
+  // Convertir los números en pares de coordenadas { lat, lng }
+  const parsedCoordinates = [];
+  for (let i = 0; i < numbers.length; i += 2) {
+    if (i + 1 < numbers.length) {
+      parsedCoordinates.push({ lat: numbers[i], lng: numbers[i + 1] });
+    }
+  }
+
+  return parsedCoordinates;
 };
+
 
 // Función para convertir coordenadas de array de objetos a string
 const stringifyCoordinates = (coords: { lat: number, lng: number }[]): string => {
@@ -18,6 +30,8 @@ const stringifyCoordinates = (coords: { lat: number, lng: number }[]): string =>
 };
 
 const SiteForm: React.FC = () => {
+  // Estado para manejar el contenido de coordenadas
+  const [coordinatesString, setCoordinatesString] = useState<string>('');
   // Estado para almacenar las zonas
   const [zones, setZones] = useState<Site[]>([]);
   // Estado para almacenar los tipos de sitio
@@ -83,8 +97,8 @@ const SiteForm: React.FC = () => {
   const handleSelectZone = (zoneId: string) => {
     const zone = zones.find((z) => z._id === zoneId);
     if (zone) {
-      setFormData({ ...zone, coordinates: parseCoordinates(stringifyCoordinates(zone.coordinates)) });
-      setCoordinates(zone.coordinates.map(coord => ({ lat: coord.lat.toString(), lng: coord.lng.toString() })));
+      setFormData({ ...zone, coordinates: zone.coordinates });
+      setCoordinatesString(stringifyCoordinates(zone.coordinates));
       setSelectedZone(zone);
       setIsEditing(true);
       setShowPopup(false);
@@ -109,11 +123,9 @@ const SiteForm: React.FC = () => {
     }
   };
 
-  // Función para manejar los cambios en las coordenadas
-  const handleCoordinateChange = (index: number, field: 'lat' | 'lng', value: string) => {
-    const newCoordinates = [...coordinates];
-    newCoordinates[index][field] = value;
-    setCoordinates(newCoordinates);
+  // Función para manejar los cambios del textarea de coordinadas
+  const handleTextAreaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setCoordinatesString(e.target.value);
   };
 
   // Función para agregar un nuevo campo de coordenadas
@@ -121,36 +133,33 @@ const SiteForm: React.FC = () => {
     setCoordinates([...coordinates, { lat: '', lng: '' }]);
   };
 
-  // Función para guardar una zona nueva o actualizada
   const handleSave = async () => {
     try {
-      // Convertir las coordenadas a formato numérico
-      const parsedCoordinates = coordinates.map(coord => ({ lat: parseFloat(coord.lat), lng: parseFloat(coord.lng) }));
+      const parsedCoordinates = parseCoordinates(coordinatesString);
+      if (parsedCoordinates.some(coord => isNaN(coord.lat) || isNaN(coord.lng))) {
+        alert('Las coordenadas ingresadas no son válidas. Asegúrate de usar el formato correcto.');
+        return;
+      }
+  
       const saveData = {
         ...formData,
         coordinates: parsedCoordinates,
-        coordinatesrestriction: parsedCoordinates, // Asignar el mismo valor a coordinatesrestriction
+        coordinatesrestriction: parsedCoordinates,
       };
-
-      // Comprobar si el polígono está cerrado y cerrarlo si es necesario
-      if (parsedCoordinates.length > 0 && 
-          (parsedCoordinates[0].lat !== parsedCoordinates[parsedCoordinates.length - 1].lat || 
+  
+      if (parsedCoordinates.length > 0 &&
+          (parsedCoordinates[0].lat !== parsedCoordinates[parsedCoordinates.length - 1].lat ||
            parsedCoordinates[0].lng !== parsedCoordinates[parsedCoordinates.length - 1].lng)) {
         parsedCoordinates.push(parsedCoordinates[0]);
-        saveData.coordinatesrestriction.push(parsedCoordinates[0]); // También cerrar coordinatesrestriction
+        saveData.coordinatesrestriction.push(parsedCoordinates[0]);
       }
-      console.log(saveData.coordinates);
-      console.log(saveData.coordinatesrestriction);
-    
-      console.log(saveData.type.radius);
-      
+  
       if (isEditing && selectedZone && selectedZone._id) {
-        // Editar zona existente
         await axios.put(`${DATABASE_URL}zones/${selectedZone._id}`, saveData);
       } else {
-        // Crear nueva zona
         await axios.post(`${DATABASE_URL}zones`, saveData);
       }
+  
       setShowConfirmation(true);
       fetchZones();
       handleNew();
@@ -163,7 +172,7 @@ const SiteForm: React.FC = () => {
       }
     }
   };
-
+  
   // Función para limpiar el formulario y preparar para una nueva entrada
   const handleNew = () => {
     setFormData({
@@ -173,7 +182,7 @@ const SiteForm: React.FC = () => {
       type: { name: '', radius: 0, restriction: { days: [], startHour: '', endHour: '' }},
       coordinatesrestriction: [],
     });
-    setCoordinates([]); // Limpiar los campos de coordenadas
+    setCoordinatesString(''); // Limpiar el textarea de coordenadas
     setIsEditing(false);
     setSelectedZone(null);
   };
@@ -203,28 +212,13 @@ const SiteForm: React.FC = () => {
         </Form.Group>
         <Form.Group controlId="formCoordinates">
           <Form.Label>Coordenadas</Form.Label>
-          {coordinates.map((coord, index) => (
-            <Row key={index}>
-              <Col>
-                <Form.Control
-                  type="text"
-                  placeholder="Latitud"
-                  value={coord.lat}
-                  onChange={(e) => handleCoordinateChange(index, 'lat', e.target.value)}
-                />
-              </Col>
-              <Col>
-                <Form.Control
-                  type="text"
-                  placeholder="Longitud"
-                  value={coord.lng}
-                  onChange={(e) => handleCoordinateChange(index, 'lng', e.target.value)}
-                />
-              </Col>
-            </Row>
-          ))}
-          
-          <Button onClick={addCoordinateField} variant="secondary" className="mt-2">Agregar Coordenada</Button>
+          <Form.Control
+            as="textarea"
+            name="coordinates"
+            value={coordinatesString}
+            onChange={handleTextAreaChange}
+            rows={5}
+          />
         </Form.Group>
         <Form.Group controlId="formType">
           <Form.Label>Tipo</Form.Label>
