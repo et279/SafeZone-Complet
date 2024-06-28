@@ -18,7 +18,7 @@ const PerimeterInterface: React.FC = () => {
   const [mapZoom, setMapZoom] = useState<number>(DEFAULT_MAP_ZOOM);
 
   useEffect(() => {
-    axios.get<Site[]>(DATABASE_URL)
+    axios.get<Site[]>(`{DATABASE_URL}zone`)
       .then(response => setSites(response.data))
       .catch(error => console.error('Error fetching zones:', error));
   }, []);
@@ -78,12 +78,12 @@ const PerimeterInterface: React.FC = () => {
   const handleGenerateBuffer = () => {
     const newPolygons = selectedSitesList.map(site => {
       const coordinates = site.coordinates.map(coord => [coord.lng, coord.lat]);
-      if (coordinates.length > 0) {
+      if (coordinates.length > 0 || coordinates[coordinates.length] == coordinates[0]) {
         // Cerrar el polígono añadiendo el primer punto al final
         coordinates.push(coordinates[0]);
       }
       const polygon = turf.polygon([coordinates]);
-      const buffered = turf.buffer(polygon, site.radius, { units: 'meters' });
+      const buffered = turf.buffer(polygon, site.type.radius, { units: 'meters' });
   
       if (buffered) {
         return {
@@ -105,7 +105,7 @@ const PerimeterInterface: React.FC = () => {
     selectedSitesList.forEach(site => {
         const bufferedPolygon = polygons.find(polygon => polygon.siteId === site._id && polygon.color === 'red');
         if (bufferedPolygon) {
-            axios.post(`${DATABASE_URL}/save-restriction-coordinates/${site._id}`, {
+            axios.post(`${DATABASE_URL}zone/save-restriction-coordinates/${site._id}`, {
                 restrictionCoordinates: bufferedPolygon.coordinates.map(coord => ({
                     lat: coord[0],
                     lng: coord[1]

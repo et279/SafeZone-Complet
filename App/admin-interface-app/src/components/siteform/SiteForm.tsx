@@ -1,209 +1,161 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Button, Form, Modal } from 'react-bootstrap';
 import axios from 'axios';
+import { DATABASE_URL } from '../../types/variables';
+import { Site, SiteType } from '../../types/types';
 
-// Definiciones de tipos
-type Site = {
-  _id?: string;
-  name: string;
-  coordinates: { lat: number; lng: number }[];
-  radius: number;
-  type: string;
-  restriction: Restriction;
-};
-
-type Restriction = {
-  days: string[];
-  startHour: string;
-  endHour: string;
-};
-
-const defaultData: { [key: string]: Site } = {
-  'Centro Educativo': {
-    name: '',
-    coordinates: [{ lat: 0, lng: 0 }],
-    radius: 100,
-    type: 'Centro Educativo',
-    restriction: {
-      days: ['Todos los días'],
-      startHour: '05:00',
-      endHour: '22:00'
-    }
-  },
-  'Ludoteca': {
-    name: '',
-    coordinates: [{ lat: 0, lng: 0 }],
-    radius: 50,
-    type: 'Ludoteca',
-    restriction: {
-      days: ['Lunes', 'Miércoles', 'Viernes'],
-      startHour: '09:00',
-      endHour: '17:00'
-    }
-  },
-  'Centro Deportivo': {
-    name: '',
-    coordinates: [{ lat: 0, lng: 0 }],
-    radius: 80,
-    type: 'Centro Deportivo',
-    restriction: {
-      days: ['Todos los días'],
-      startHour: '05:00',
-      endHour: '22:00'
-    }
-  },
-  'Zona Histórica': {
-    name: '',
-    coordinates: [{ lat: 0, lng: 0 }],
-    radius: 80,
-    type: 'Zona Histórica',
-    restriction: {
-      days: ['Todos los días'],
-      startHour: '00:00',
-      endHour: '23:59'
-    }
-  },
-  'Espacio Público': {
-    name: '',
-    coordinates: [{ lat: 0, lng: 0 }],
-    radius: 80,
-    type: 'Espacio Público',
-    restriction: {
-      days: ['Todos los días'],
-      startHour: '00:00',
-      endHour: '23:59'
-    }
-  },
-  'Evento Público': {
-    name: '',
-    coordinates: [{ lat: 0, lng: 0 }],
-    radius: 80,
-    type: 'Evento Público',
-    restriction: {
-      days: ['Durante el evento'],
-      startHour: '00:00',
-      endHour: '23:59'
-    }
-  },
-  'Evento Privado': {
-    name: '',
-    coordinates: [{ lat: 0, lng: 0 }],
-    radius: 80,
-    type: 'Evento Privado',
-    restriction: {
-      days: ['Durante el evento'],
-      startHour: '2 horas antes',
-      endHour: '2 horas después'
-    }
-  },
-  'Hospital': {
-    name: '',
-    coordinates: [{ lat: 0, lng: 0 }],
-    radius: 80,
-    type: 'Hospital',
-    restriction: {
-      days: ['Todos los días'],
-      startHour: '00:00',
-      endHour: '23:59'
-    }
-  }
-};
-
-
+// Función para parsear coordenadas desde string a array de objetos
 const parseCoordinates = (coords: string): { lat: number, lng: number }[] => {
-  return coords.split(' ').map(coord => {
-    const [lng, lat] = coord.split(',').map(Number);
+  return coords.split('\n').map(coord => {
+    const [lat, lng] = coord.split(',').map(Number);
     return { lat, lng };
   });
 };
 
+// Función para convertir coordenadas de array de objetos a string
 const stringifyCoordinates = (coords: { lat: number, lng: number }[]): string => {
-  return coords.map(coord => `${coord.lng},${coord.lat}`).join(' ');
+  return coords.map(coord => `${coord.lat},${coord.lng}`).join('\n');
 };
 
 const SiteForm: React.FC = () => {
-  const [sites, setSites] = useState<Site[]>([]);
-  const [selectedSite, setSelectedSite] = useState<Site | null>(null);
+  // Estado para almacenar las zonas
+  const [zones, setZones] = useState<Site[]>([]);
+  // Estado para almacenar los tipos de sitio
+  const [siteTypes, setSiteTypes] = useState<SiteType[]>([]);
+  // Estado para almacenar la zona seleccionada
+  const [selectedZone, setSelectedZone] = useState<Site | null>(null);
+  // Estado para manejar los datos del formulario
   const [formData, setFormData] = useState<Site>({
+    _id: '',
     name: '',
     coordinates: [],
-    radius: 100,
-    type: '',
-    restriction: {
-      days: [],
-      startHour: '',
-      endHour: ''
-    }
+    type: { name: '', radius: 0, restriction: { days: [], startHour: '', endHour: '' }},
+    coordinatesrestriction: [],
   });
+  // Estado para manejar las coordenadas individuales
+  const [coordinates, setCoordinates] = useState<{ lat: string, lng: string }[]>([]);
+  // Estado para manejar la visibilidad del popup
   const [showPopup, setShowPopup] = useState(false);
+  // Estado para manejar si se está editando una zona existente
   const [isEditing, setIsEditing] = useState(false);
+  // Estado para manejar la visibilidad del modal de confirmación
   const [showConfirmation, setShowConfirmation] = useState(false);
 
+  // Efecto para obtener las zonas y los tipos de sitio al cargar el componente
   useEffect(() => {
-    fetchSites();
+    fetchZones();
+    fetchSiteTypes();
   }, []);
 
-  const fetchSites = async () => {
+  // Función para obtener las zonas desde la base de datos
+  const fetchZones = async () => {
     try {
-      const response = await axios.get('http://localhost:3000/zones');
+      const response = await axios.get(`${DATABASE_URL}zones`);
       if (Array.isArray(response.data)) {
-        setSites(response.data);
+        setZones(response.data);
       } else {
-        setSites([]);
+        setZones([]);
       }
     } catch (error) {
-      console.error('Error fetching sites:', error);
-      setSites([]);
+      console.error('Error fetching zones:', error);
+      setZones([]);
     }
   };
 
-  const handleSelectSite = (siteId: string) => {
-    const site = sites.find((s) => s._id === siteId);
-    if (site) {
-      setFormData({ ...site, coordinates: parseCoordinates(stringifyCoordinates(site.coordinates)) });
-      setSelectedSite(site);
+  // Función para obtener los tipos de sitio desde la base de datos
+  const fetchSiteTypes = async () => {
+    addCoordinateField()
+    addCoordinateField()
+    try {
+      const response = await axios.get(`${DATABASE_URL}site-types`);
+      if (Array.isArray(response.data)) {
+        setSiteTypes(response.data);
+      } else {
+        setSiteTypes([]);
+      }
+    } catch (error) {
+      console.error('Error fetching site types:', error);
+      setSiteTypes([]);
+    }
+  };
+
+  // Función para manejar la selección de una zona
+  const handleSelectZone = (zoneId: string) => {
+    const zone = zones.find((z) => z._id === zoneId);
+    if (zone) {
+      setFormData({ ...zone, coordinates: parseCoordinates(stringifyCoordinates(zone.coordinates)) });
+      setCoordinates(zone.coordinates.map(coord => ({ lat: coord.lat.toString(), lng: coord.lng.toString() })));
+      setSelectedZone(zone);
       setIsEditing(true);
       setShowPopup(false);
     }
   };
 
+  // Función para manejar los cambios en los campos del formulario
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
 
     if (name === 'type') {
-      const typeData = defaultData[value as keyof typeof defaultData];
-      setFormData({
-        ...formData,
-        [name]: value,
-        radius: typeData.radius,
-        restriction: typeData.restriction
-      });
-    } else if (name === 'coordinates') {
-      setFormData({
-        ...formData,
-        coordinates: parseCoordinates(value)
-      });
+      const typeData = siteTypes.find((type) => type.name === value);
+      if (typeData) {
+        setFormData({
+          ...formData,
+          type: typeData,
+          coordinatesrestriction: formData.coordinates, // Actualizar coordenadas de restricción
+        });
+      }
     } else {
       setFormData({ ...formData, [name]: value });
     }
   };
-  // actualizar sitio
+
+  // Función para manejar los cambios en las coordenadas
+  const handleCoordinateChange = (index: number, field: 'lat' | 'lng', value: string) => {
+    const newCoordinates = [...coordinates];
+    newCoordinates[index][field] = value;
+    setCoordinates(newCoordinates);
+  };
+
+  // Función para agregar un nuevo campo de coordenadas
+  const addCoordinateField = () => {
+    setCoordinates([...coordinates, { lat: '', lng: '' }]);
+  };
+
+  // Función para guardar una zona nueva o actualizada
   const handleSave = async () => {
     try {
-      const saveData = { ...formData, coordinates: parseCoordinates(stringifyCoordinates(formData.coordinates)) };
-  
-      if (isEditing && selectedSite && selectedSite._id) {
-        await axios.put(`http://localhost:3000/zones/${selectedSite._id}`, saveData);
-        console.log(`Actualizando sitio con ID: ${selectedSite._id}`);
+      // Convertir las coordenadas a formato numérico
+      const parsedCoordinates = coordinates.map(coord => ({ lat: parseFloat(coord.lat), lng: parseFloat(coord.lng) }));
+      const saveData = {
+        ...formData,
+        coordinates: parsedCoordinates,
+        coordinatesrestriction: parsedCoordinates, // Asignar el mismo valor a coordinatesrestriction
+      };
+
+      // Comprobar si el polígono está cerrado y cerrarlo si es necesario
+      if (parsedCoordinates.length > 0 && 
+          (parsedCoordinates[0].lat !== parsedCoordinates[parsedCoordinates.length - 1].lat || 
+           parsedCoordinates[0].lng !== parsedCoordinates[parsedCoordinates.length - 1].lng)) {
+        parsedCoordinates.push(parsedCoordinates[0]);
+        saveData.coordinatesrestriction.push(parsedCoordinates[0]); // También cerrar coordinatesrestriction
+      }
+      console.log(saveData.coordinates);
+      console.log(saveData.coordinatesrestriction);
+    
+      console.log(saveData.type.radius);
+      
+      if (isEditing && selectedZone && selectedZone._id) {
+        // Editar zona existente
+        await axios.put(`${DATABASE_URL}zones/${selectedZone._id}`, saveData);
       } else {
-        console.log(`Datos para crear:`, saveData);
-        await axios.post('http://localhost:3000/zones', saveData);
+        // Crear nueva zona
+        await axios.post(`${DATABASE_URL}zones`, saveData);
       }
       setShowConfirmation(true);
-      fetchSites();
+      fetchZones();
       handleNew();
     } catch (error) {
-      console.error('Error saving site:', error);
+      console.error('Error saving zone:', error);
       if (axios.isAxiosError(error)) {
         console.error('Error data:', error.response?.data);
       } else {
@@ -211,27 +163,25 @@ const SiteForm: React.FC = () => {
       }
     }
   };
-  // limpia el formulario y lo deja listo para guardar un nuevo sitio
+
+  // Función para limpiar el formulario y preparar para una nueva entrada
   const handleNew = () => {
     setFormData({
+      _id: '',
       name: '',
       coordinates: [],
-      radius: 100,
-      type: '',
-      restriction: {
-        days: [],
-        startHour: '',
-        endHour: ''
-      }
+      type: { name: '', radius: 0, restriction: { days: [], startHour: '', endHour: '' }},
+      coordinatesrestriction: [],
     });
+    setCoordinates([]); // Limpiar los campos de coordenadas
     setIsEditing(false);
-    setSelectedSite(null);
+    setSelectedZone(null);
   };
 
   return (
     <Container>
-      <h1>Gestión de Sitios</h1>
-      <p>Utiliza las opciones a continuación para agregar o editar sitios.</p>
+      <h1>Gestión de Zonas</h1>
+      <p>Utiliza las opciones a continuación para agregar o editar zonas.</p>
       <Row>
         <Col>
           <Button onClick={() => setShowPopup(true)} variant="primary" className="mb-3">Editar</Button>
@@ -253,84 +203,63 @@ const SiteForm: React.FC = () => {
         </Form.Group>
         <Form.Group controlId="formCoordinates">
           <Form.Label>Coordenadas</Form.Label>
-          <Form.Control
-            as="textarea"
-            rows={3}
-            name="coordinates"
-            value={stringifyCoordinates(formData.coordinates)}
-            onChange={handleInputChange}
-          />
+          {coordinates.map((coord, index) => (
+            <Row key={index}>
+              <Col>
+                <Form.Control
+                  type="text"
+                  placeholder="Latitud"
+                  value={coord.lat}
+                  onChange={(e) => handleCoordinateChange(index, 'lat', e.target.value)}
+                />
+              </Col>
+              <Col>
+                <Form.Control
+                  type="text"
+                  placeholder="Longitud"
+                  value={coord.lng}
+                  onChange={(e) => handleCoordinateChange(index, 'lng', e.target.value)}
+                />
+              </Col>
+            </Row>
+          ))}
+          
+          <Button onClick={addCoordinateField} variant="secondary" className="mt-2">Agregar Coordenada</Button>
         </Form.Group>
         <Form.Group controlId="formType">
           <Form.Label>Tipo</Form.Label>
           <Form.Control
             as="select"
             name="type"
-            value={formData.type}
+            value={formData.type.name}
             onChange={handleInputChange}
           >
             <option value="">Selecciona un tipo</option>
-            {Object.keys(defaultData).map((type) => (
-              <option key={type} value={type}>
-                {type}
+            {siteTypes.map((type) => (
+              <option key={type.name} value={type.name}>
+                {type.name}
               </option>
             ))}
           </Form.Control>
-        </Form.Group>
-        <Form.Group controlId="formRadius">
-          <Form.Label>Radio</Form.Label>
-          <Form.Control
-            type="number"
-            name="radius"
-            value={formData.radius}
-            onChange={handleInputChange}
-          />
-        </Form.Group>
-        <Form.Group controlId="formDays">
-          <Form.Label>Días de Restricción</Form.Label>
-          <Form.Control
-            type="text"
-            name="days"
-            value={formData.restriction.days.join(', ')}
-            onChange={(e) => setFormData({ ...formData, restriction: { ...formData.restriction, days: e.target.value.split(', ') } })}
-          />
-        </Form.Group>
-        <Form.Group controlId="formStartHour">
-          <Form.Label>Hora de Inicio</Form.Label>
-          <Form.Control
-            type="time"
-            name="startHour"
-            value={formData.restriction.startHour}
-            onChange={(e) => setFormData({ ...formData, restriction: { ...formData.restriction, startHour: e.target.value } })}
-          />
-        </Form.Group>
-        <Form.Group controlId="formEndHour">
-          <Form.Label>Hora de Fin</Form.Label>
-          <Form.Control
-            type="time"
-            name="endHour"
-            value={formData.restriction.endHour}
-            onChange={(e) => setFormData({ ...formData, restriction: { ...formData.restriction, endHour: e.target.value } })}
-          />
         </Form.Group>
         <Button onClick={handleSave} variant="primary" className="mt-3">{isEditing ? 'Editar' : 'Guardar Nuevo'}</Button>
       </Form>
 
       <Modal show={showPopup} onHide={() => setShowPopup(false)}>
         <Modal.Header closeButton>
-          <Modal.Title>Seleccionar Sitio</Modal.Title>
+          <Modal.Title>Seleccionar Zona</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Form.Group controlId="selectSite">
-            <Form.Label>Selecciona un sitio</Form.Label>
+          <Form.Group controlId="selectZone">
+            <Form.Label>Selecciona una zona</Form.Label>
             <Form.Control
               as="select"
-              onChange={(e) => handleSelectSite(e.target.value)}
+              onChange={(e) => handleSelectZone(e.target.value)}
             >
-              <option value="">Selecciona un sitio</option>
-              {Array.isArray(sites) && sites.map((site) => (
-                <option key={site._id} value={site._id}>
-                  {site.name}
+              <option value="">Selecciona una zona</option>
+              {zones.map((zone) => (
+                <option key={zone._id} value={zone._id}>
+                  {zone.name}
                 </option>
               ))}
             </Form.Control>
@@ -358,3 +287,4 @@ const SiteForm: React.FC = () => {
 };
 
 export default SiteForm;
+

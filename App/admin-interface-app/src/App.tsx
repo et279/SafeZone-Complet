@@ -8,6 +8,7 @@ import SiteForm from './components/siteform/SiteForm';
 import { Button, Container } from 'react-bootstrap';
 import './App.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
+import SiteTypeAdmin from './components/tipos de sitios/TiposdeSitios';
 
 
 const App: React.FC = () => {
@@ -31,6 +32,7 @@ const App: React.FC = () => {
           <Route path="/" element={<PerimeterInterface />} />
           <Route path="/perimeter-interface" element={<PerimeterInterface />} />
           <Route path="/site-form" element={<SiteForm />} />
+          <Route path="/site-types" element={<SiteTypeAdmin />} />
           {/* Agrega más rutas aquí para otras funcionalidades administrativas */}
         </Routes>
       </Container>
