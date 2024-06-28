@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Form, Button, ListGroup } from 'react-bootstrap';
 import { MapContainer, TileLayer, Polygon, useMap } from 'react-leaflet';
-import axios from 'axios';
 import * as turf from '@turf/turf';
 import 'leaflet/dist/leaflet.css';
 import './PerimeterInterface.css';
-import { Site, PolygonData } from '../../types/types';
-import { DEFAULT_MAP_ZOOM, DEFAULT_MAP_CENTER, DATABASE_URL} from '../../types/variables';
+import { Site, PolygonData, SiteType } from '../../types/types';
+import { DEFAULT_MAP_ZOOM, DEFAULT_MAP_CENTER } from '../../types/variables';
+import api from '../../services/api';
 
 const PerimeterInterface: React.FC = () => {
   const [sites, setSites] = useState<Site[]>([]);
@@ -16,12 +16,64 @@ const PerimeterInterface: React.FC = () => {
   const [generatedBuffers, setGeneratedBuffers] = useState<boolean>(false);
   const [mapCenter, setMapCenter] = useState<[number, number]>(DEFAULT_MAP_CENTER);
   const [mapZoom, setMapZoom] = useState<number>(DEFAULT_MAP_ZOOM);
+  const [siteTypes, setSiteTypes] = useState<SiteType[]>([]);
+
 
   useEffect(() => {
-    axios.get<Site[]>(`{DATABASE_URL}zone`)
-      .then(response => setSites(response.data))
-      .catch(error => console.error('Error fetching zones:', error));
+    const fetchZonesAndSiteTypes = async () => {
+      try {
+        const [zonesResponse, siteTypesResponse] = await Promise.all([
+          api.get<Site[]>('zones'),
+          api.get<SiteType[]>('site-types')
+        ]);
+        setSites(zonesResponse.data);
+        setSiteTypes(siteTypesResponse.data);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+  
+    fetchZonesAndSiteTypes();
   }, []);
+
+  
+  // agregar todos los sitios a la lista
+  const handleAddAllSites = () => {
+    const allSites = sites.filter(site => !selectedSitesList.some(selectedSite => selectedSite._id === site._id));
+    setSelectedSitesList([...selectedSitesList, ...allSites]);
+  
+    const newPolygons = allSites.map(site => ({
+      coordinates: site.coordinates.map(coord => [coord.lat, coord.lng] as [number, number]),
+      color: 'blue',
+      siteId: site._id
+    }));
+  
+    const restrictedPolygons = allSites
+      .filter(site => site.coordinatesrestriction.length > 0)
+      .map(site => ({
+        coordinates: site.coordinatesrestriction.map(coord => [coord.lat, coord.lng] as [number, number]),
+        color: 'orange',
+        siteId: site._id
+      }));
+  
+    setPolygons([...polygons, ...newPolygons, ...restrictedPolygons]);
+  
+    if (allSites.length > 0 && allSites[0].coordinates.length > 0) {
+      const firstCoordinate = allSites[0].coordinates[0];
+      setMapCenter([firstCoordinate.lat, firstCoordinate.lng]);
+      setMapZoom(DEFAULT_MAP_ZOOM);
+    }
+  };
+  
+  // eliminar todos los sitios de la lista
+  const handleRemoveAllSites = () => {
+    setSelectedSitesList([]);
+    setPolygons([]);
+    setMapCenter(DEFAULT_MAP_CENTER);
+    setMapZoom(DEFAULT_MAP_ZOOM);
+    setGeneratedBuffers(false);
+  };
+  
   // agregar sitios a la lista
   const handleAddSite = () => {
     if (selectedSite && !selectedSitesList.some(site => site._id === selectedSite)) {
@@ -78,13 +130,21 @@ const PerimeterInterface: React.FC = () => {
   const handleGenerateBuffer = () => {
     const newPolygons = selectedSitesList.map(site => {
       const coordinates = site.coordinates.map(coord => [coord.lng, coord.lat]);
-      if (coordinates.length > 0 || coordinates[coordinates.length] == coordinates[0]) {
-        // Cerrar el polígono añadiendo el primer punto al final
+
+      // Verificar si el polígono está cerrado y cerrarlo si es necesario
+      if (coordinates.length > 0 && (coordinates[coordinates.length - 1][0] !== coordinates[0][0] || coordinates[coordinates.length - 1][1] !== coordinates[0][1])) {
         coordinates.push(coordinates[0]);
       }
+      // Buscar el tipo de sitio por su ID
+      const siteType = siteTypes.find(type => type._id === site.type);
+      if (!siteType || typeof siteType.radius !== 'number') {
+        console.error('Site type or radius is missing for site:', site.name);
+        return null;
+      }
+
       const polygon = turf.polygon([coordinates]);
-      const buffered = turf.buffer(polygon, site.type.radius, { units: 'meters' });
-  
+      const buffered = turf.buffer(polygon, siteType.radius, { units: 'meters' });
+
       if (buffered) {
         return {
           coordinates: buffered.geometry.coordinates[0].map(coord => [coord[1], coord[0]]),
@@ -96,16 +156,17 @@ const PerimeterInterface: React.FC = () => {
         return null;
       }
     }).filter(polygon => polygon !== null) as PolygonData[];
-  
+
     setPolygons([...polygons, ...newPolygons]);
     setGeneratedBuffers(true);
   };
+
   // Guardar buffer
   const handleSaveBuffers = () => {
     selectedSitesList.forEach(site => {
         const bufferedPolygon = polygons.find(polygon => polygon.siteId === site._id && polygon.color === 'red');
         if (bufferedPolygon) {
-            axios.post(`${DATABASE_URL}zone/save-restriction-coordinates/${site._id}`, {
+          api.post(`zone/save-restriction-coordinates/${site._id}`, {
                 restrictionCoordinates: bufferedPolygon.coordinates.map(coord => ({
                     lat: coord[0],
                     lng: coord[1]
@@ -155,6 +216,18 @@ const PerimeterInterface: React.FC = () => {
               <Col md={3}>
                 <Button variant="primary" onClick={handleAddSite} style={{ maxWidth: '100%' }}>
                   <i className="bi bi-plus-circle"></i> Agregar Sitio
+                </Button>
+              </Col>
+            </Row>
+            <Row className="align-items-center mt-3">
+              <Col md={6}>
+                <Button variant="primary" onClick={handleAddAllSites} style={{ maxWidth: '100%' }}>
+                  <i className="bi bi-plus-circle"></i> Agregar Todas las Zonas
+                </Button>
+              </Col>
+              <Col md={6}>
+                <Button variant="danger" onClick={handleRemoveAllSites} style={{ maxWidth: '100%' }}>
+                  <i className="bi bi-trash"></i> Eliminar Todas las Zonas
                 </Button>
               </Col>
             </Row>

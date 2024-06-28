@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Form, Button, Table, FloatingLabel } from 'react-bootstrap';
-import axios from 'axios';
 import { SiteType } from '../../types/types';
-import { DATABASE_URL } from '../../types/variables';
 import './TiposdeSitios.css';
+import api from '../../services/api';
 
 const SiteTypeForm: React.FC = () => {
   const [siteTypes, setSiteTypes] = useState<SiteType[]>([]);
@@ -19,7 +18,7 @@ const SiteTypeForm: React.FC = () => {
   const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
-    axios.get<SiteType[]>(`${DATABASE_URL}site-types`)
+    api.get<SiteType[]>(`site-types`)
       .then(response => setSiteTypes(response.data))
       .catch(error => console.error('Error fetching site types:', error));
   }, []);
@@ -61,7 +60,7 @@ const SiteTypeForm: React.FC = () => {
     if (newSiteType.name && newSiteType.radius > 0) {
       
       if (isEditing) {
-        axios.put(`${DATABASE_URL}site-types/${newSiteType.name}`, newSiteType)
+        api.put(`site-types/${newSiteType.name}`, newSiteType)
           .then(response => {
             setSiteTypes(siteTypes.map(siteType =>
               siteType.name === newSiteType.name ? response.data : siteType
@@ -72,7 +71,7 @@ const SiteTypeForm: React.FC = () => {
       } else {
         
         console.log(newSiteType.name+' - '+newSiteType.radius);
-        axios.post(`${DATABASE_URL}site-types`, newSiteType)
+        api.post(`site-types`, newSiteType)
           .then(response => {
             setSiteTypes([...siteTypes, response.data]);
             resetForm();

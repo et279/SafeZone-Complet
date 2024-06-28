@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Container, Row, Col, Button, Form, Modal } from 'react-bootstrap';
 import axios from 'axios';
-import { DATABASE_URL } from '../../types/variables';
 import { Site, SiteType } from '../../types/types';
+import api from '../../services/api';
 
 const parseCoordinates = (coords: string): { lat: number, lng: number }[] => {
   // Eliminar todas las comas y reducir espacios múltiples a uno solo
@@ -66,7 +66,7 @@ const SiteForm: React.FC = () => {
   // Función para obtener las zonas desde la base de datos
   const fetchZones = async () => {
     try {
-      const response = await axios.get(`${DATABASE_URL}zones`);
+      const response = await api.get(`zones`);
       if (Array.isArray(response.data)) {
         setZones(response.data);
       } else {
@@ -83,7 +83,7 @@ const SiteForm: React.FC = () => {
     addCoordinateField()
     addCoordinateField()
     try {
-      const response = await axios.get(`${DATABASE_URL}site-types`);
+      const response = await api.get(`site-types`);
       if (Array.isArray(response.data)) {
         setSiteTypes(response.data);
       } else {
@@ -157,9 +157,9 @@ const SiteForm: React.FC = () => {
       }
   
       if (isEditing && selectedZone && selectedZone._id) {
-        await axios.put(`${DATABASE_URL}zones/${selectedZone._id}`, saveData);
+        await api.put(`zones/${selectedZone._id}`, saveData);
       } else {
-        await axios.post(`${DATABASE_URL}zones`, saveData);
+        await api.post(`zones`, saveData);
       }
   
       setShowConfirmation(true);
