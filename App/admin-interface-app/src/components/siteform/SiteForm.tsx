@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Container, Row, Col, Button, Form, Modal } from 'react-bootstrap';
 import axios from 'axios';
 import { DATABASE_URL } from '../../types/variables';
@@ -30,6 +30,8 @@ const stringifyCoordinates = (coords: { lat: number, lng: number }[]): string =>
 };
 
 const SiteForm: React.FC = () => {
+  
+  const nameInputRef = useRef<HTMLInputElement>(null);
   // Estado para manejar el contenido de coordenadas
   const [coordinatesString, setCoordinatesString] = useState<string>('');
   // Estado para almacenar las zonas
@@ -165,8 +167,11 @@ const SiteForm: React.FC = () => {
       handleNew();
     } catch (error) {
       console.error('Error saving zone:', error);
+      
+      handleNew();
       if (axios.isAxiosError(error)) {
         console.error('Error data:', error.response?.data);
+        
       } else {
         console.error('Unexpected error:', error);
       }
@@ -185,6 +190,10 @@ const SiteForm: React.FC = () => {
     setCoordinatesString(''); // Limpiar el textarea de coordenadas
     setIsEditing(false);
     setSelectedZone(null);
+    // Enfocar el input de nombre
+    if (nameInputRef.current) {
+      nameInputRef.current.focus();
+    }
   };
 
   return (
@@ -204,10 +213,13 @@ const SiteForm: React.FC = () => {
         <Form.Group controlId="formName">
           <Form.Label>Nombre</Form.Label>
           <Form.Control
+            autoFocus
             type="text"
             name="name"
             value={formData.name}
             onChange={handleInputChange}
+            ref={nameInputRef} // Asignar la referencia aquí
+
           />
         </Form.Group>
         <Form.Group controlId="formCoordinates">
