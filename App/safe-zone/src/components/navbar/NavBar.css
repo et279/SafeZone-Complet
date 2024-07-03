@@ -1,0 +1,16 @@
+.custom-navbar {
+    box-shadow: 0 2px 4px rgb(0 0 0 / 32%);
+    background-color: var(--primary-color) !important;/* Color de fondo del contenedor */
+    max-height: var(--navbar-height); /* Establece la altura maxima */
+    height: calc(var(--navbar-height) - 2vh);
+    margin: 5px auto;
+    border-radius: var(--cont-border-rad);
+  }
+  .custom-navbar .navbar-brand {
+    color: var(--text-color) !important;
+  }
+  
+  .custom-navbar .navbar-nav .nav-link {
+    color: var(--text-color) !important;
+  }
+  

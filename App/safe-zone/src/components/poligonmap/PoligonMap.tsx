@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { Polygon, Popup} from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { fetchZones, generatePolygons } from '../../types/polygonLogic';
-import { Coordinate, Restriction, Zone, } from '../../types/Zone';
-import * as turf from '@turf/turf';
+import { Restriction, Zone, } from '../../types/Zone';
 
+import './PoligonMap.css';
 
 
 const PolygonMap: React.FC = () => {
@@ -15,7 +15,7 @@ const PolygonMap: React.FC = () => {
       const zones: Zone[] = await fetchZones();
       const generatedPolygons = generatePolygons(zones);
       setPolygons(generatedPolygons);
-      console.log(zones);
+      //console.log(zones);
     };
 
     loadPolygons();
@@ -26,8 +26,8 @@ const PolygonMap: React.FC = () => {
   return (
           polygons.map((polygon, index) => (
             <React.Fragment key={index}>
-                <Polygon positions={polygon.coordinatesrestriction} pathOptions={{ color: 'blue' }} />
-                <Polygon key={index} positions={polygon.coordinates} pathOptions={{ color: 'red' }}>
+                <Polygon positions={polygon.coordinatesrestriction} className='zone-protect' />
+                <Polygon key={index} positions={polygon.coordinates} className='site-protect'>
                     <Popup>{polygon.name}
                     <br>
                     </br></Popup>   

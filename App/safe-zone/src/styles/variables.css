@@ -1,0 +1,35 @@
+:root {
+    /* Colores */
+    --primary-color: #f5f5f5;
+    --secondary-color: #6c757d;
+    --background-color: #ffffff;
+    --text-color: #000000;
+ 
+    /* Fuentes */
+    --font-size-title: 2rem;
+    --font-size-subtitle: 1.5rem;
+    --font-size-text: 1.3rem;
+
+
+    /* Navbar */
+    --navbar-height: 10vh;
+
+    /* Contenedor funciones */
+    --cont-btn-funt-widht: 7%;
+    --cont-btn-funt-height: 7vh;
+    --cont-btn-funt-espacingright: 2%;
+    --cont-btn-funt-espacingbottom: 4vh;
+
+    /* Contenedores */
+    --cont-border-rad: 1rem;
+  }
+  
+  [data-theme="dark"] {
+    /*Colores */
+    --primary-color: #375a7f;
+    --secondary-color: #444;
+    --background-color: #343a40;
+    --text-color: #ffffff;
+  }
+  
+  

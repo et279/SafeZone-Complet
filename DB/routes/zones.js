@@ -15,10 +15,10 @@ router.get('/', async (req, res) => {
   }
 });
 // endpoint para guardar o actualizar el buffer de una zona
-router.post('/save-restriction-coordinates/:id', async (req, res) => {
+router.put('/save-restriction-coordinates/:id', async (req, res) => {
   const { id } = req.params;
   const { restrictionCoordinates } = req.body;
-
+  // console.log(id+' - '+restrictionCoordinates);
   if (!restrictionCoordinates || !Array.isArray(restrictionCoordinates)) {
     return res.status(400).json({ error: 'Coordenadas de restricción inválidas' });
   }

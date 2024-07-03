@@ -1,0 +1,10 @@
+.zone-protect{
+    stroke: unset;
+    fill: orangered;
+    fill-opacity: .3;
+}
+.site-protect{
+    stroke: red;
+    fill: orangered;
+    fill-opacity: 0;
+}

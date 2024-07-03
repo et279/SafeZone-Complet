@@ -164,13 +164,17 @@ const PerimeterInterface: React.FC = () => {
   // Guardar buffer
   const handleSaveBuffers = () => {
     selectedSitesList.forEach(site => {
+      
         const bufferedPolygon = polygons.find(polygon => polygon.siteId === site._id && polygon.color === 'red');
+        console.log(bufferedPolygon);
+        
         if (bufferedPolygon) {
-          api.post(`zone/save-restriction-coordinates/${site._id}`, {
+          api.put(`zones/save-restriction-coordinates/${site._id}`, {
                 restrictionCoordinates: bufferedPolygon.coordinates.map(coord => ({
                     lat: coord[0],
                     lng: coord[1]
                 }))
+                
             })
             .then(response => console.log('Buffer saved for site:', site.name))
             .catch(error => console.error('Error saving buffer:', error));
@@ -233,7 +237,7 @@ const PerimeterInterface: React.FC = () => {
             </Row>
           </Form>
           <h2>Sitios Seleccionados</h2>
-          <ListGroup  >
+          <ListGroup  className='cont-list'>
             {selectedSitesList.map((site) => (
               <ListGroup.Item key={site._id} onClick={() => setSelectedSite(site._id)}>
                 {site.name}
