@@ -34,6 +34,7 @@ const PolygonMap: React.FC = () => {
                 </Polygon>
             </React.Fragment>
           ))
+          
       
   );
 };

@@ -4,24 +4,40 @@ import { Container, Row, Col, Button } from 'react-bootstrap';
 import './ControlMap.css';
 
 const MapVisualControl = () => {
+    // Estado para controlar la activación de las diferentes capas
   const [protectedSitesActive, setProtectedSitesActive] = useState(true);
   const [protectedZonesActive, setProtectedZonesActive] = useState(true);
   const [allowedZonesActive, setAllowedZonesActive] = useState(false);
 
+    // Función para alternar la clase en los elementos y el estado del botón
+  const toggleClass = (targetClass: string, setState: React.Dispatch<React.SetStateAction<boolean>>) => {
+    // Seleccionar todos los elementos con la clase 'targetClass'
+    const elements = document.querySelectorAll(`.${targetClass}`);
+
+    // Alternar la clase 'off-layer' en cada uno de los elementos
+    elements.forEach(element => {
+      element.classList.toggle('off-layer');
+    });
+
+    // Alternar el estado del botón
+    setState(prevState => !prevState);
+  };
   return (
-    <Container className='container'>
+    <Container className='container control-layer'>
       <h4 className='title'>Capas</h4>
+       {/* Control para Sitios Protegidos */}
       <div className='layer'>
         <Row>
           <Col> 
             <span className='label'>Sitios protegidos</span>
           </Col>
-          <Col>
+          <Col className='col-control-layer'>
             <Button 
-              variant={protectedSitesActive ? 'success' : 'secondary'} 
-              onClick={() => setProtectedSitesActive(!protectedSitesActive)}
+              id='sitesprotect'
+              className={`toggle-btn ${protectedSitesActive ? "toggled" : ""}`}
+              onClick={() => toggleClass('site-protect', setProtectedSitesActive)}
             >
-              {protectedSitesActive ? 'activo' : 'apagado'}
+              <div className='thumb'></div>
             </Button>
           </Col>
           <Col style={{textAlign: 'right'}}>
@@ -29,6 +45,7 @@ const MapVisualControl = () => {
           </Col>
         </Row>
       </div>
+       {/* Control para Zonas Protegidas */}
       <div className='layer'>
         <Row>
           <Col> 
@@ -36,10 +53,10 @@ const MapVisualControl = () => {
           </Col>
           <Col>
             <Button 
-              variant={protectedZonesActive ? 'success' : 'secondary'} 
-              onClick={() => setProtectedZonesActive(!protectedZonesActive)}
+              onClick={() => toggleClass('zone-protect', setProtectedZonesActive)}
+              className={`toggle-btn ${protectedZonesActive ? "toggled" : ""}`}
             >
-              {protectedZonesActive ? 'activo' : 'apagado'}
+              <div className='thumb'></div>
             </Button>
           </Col>
           <Col style={{textAlign: 'right'}}>
@@ -47,6 +64,7 @@ const MapVisualControl = () => {
           </Col>
         </Row>
       </div>
+       {/* Control para Zonas Permitidas */}
       <div className='layer'>
         <Row>
           <Col> 
@@ -54,10 +72,10 @@ const MapVisualControl = () => {
           </Col>
           <Col>
             <Button 
-              variant={allowedZonesActive ? 'success' : 'secondary'} 
-              onClick={() => setAllowedZonesActive(!allowedZonesActive)}
+              className={`toggle-btn ${allowedZonesActive ? "toggled" : ""}`}
+              onClick={() => toggleClass('allowed-areas', setAllowedZonesActive)}
             >
-              {allowedZonesActive ? 'activo' : 'apagado'}
+              <div className='thumb'></div>
             </Button>
           </Col>
           <Col style={{textAlign: 'right'}}>

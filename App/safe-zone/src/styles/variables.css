@@ -4,11 +4,13 @@
     --secondary-color: #6c757d;
     --background-color: #ffffff;
     --text-color: #000000;
+    --aprove-color: #008000;
+    --sahdow-style: #ebebeb;
  
     /* Fuentes */
     --font-size-title: 2rem;
     --font-size-subtitle: 1.5rem;
-    --font-size-text: 1.3rem;
+    --font-size-text: 1rem;
 
 
     /* Navbar */
@@ -30,6 +32,7 @@
     --secondary-color: #444;
     --background-color: #343a40;
     --text-color: #ffffff;
+    --sahdow-style: #3b5f86;
   }
   
   
