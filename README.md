@@ -1,14 +1,5 @@
 <a name="readme-top"></a>
 
-<!-- PROJECT SHIELDS -->
-
-[![Contributors][contributors-shield]][contributors-url]
-[![Forks][forks-shield]][forks-url]
-[![Stargazers][stars-shield]][stars-url]
-[![Issues][issues-shield]][issues-url]
-[![MIT License][license-shield]][license-url]
-[![LinkedIn][linkedin-shield]][linkedin-url]
-
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
@@ -156,8 +147,7 @@ React Icons
 <p align="right">(<a href="#readme-top">volver arriba</a>)</p>
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[contributors-shield]: https://img.shields.io/github/contributors/et279/SafeZone-Complet.svg?style=for-the-badge
-[contributors-url]: https://github.com/et279/SafeZone-Complet/graphs/contributors
+
 [forks-shield]: https://img.shields.io/github/forks/et279/SafeZone-Complet.svg?style=for-the-badge
 [forks-url]: https://github.com/et279/SafeZone-Complet/network/members
 [stars-shield]: https://img.shields.io/github/stars/et279/SafeZone-Complet.svg?style=for-the-badge
