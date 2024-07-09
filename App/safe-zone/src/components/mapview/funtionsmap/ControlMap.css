@@ -14,6 +14,10 @@
     .layer {
         margin-bottom: 15px;
     }
+    .layer>.row{
+        padding: 1rem;
+    }
+
     /* Presentacion de cada funcion */
     .control-layer .row {
         background-color: var(--sahdow-style);
@@ -22,6 +26,7 @@
     .label {
         font-size: var(--font-size-text);
     }
+    
 
     /* On / Off toggle */
     .toggle-btn {

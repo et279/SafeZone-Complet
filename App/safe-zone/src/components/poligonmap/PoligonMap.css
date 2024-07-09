@@ -2,15 +2,20 @@
     stroke: unset;
     fill: orangered;
     fill-opacity: .3;
-    z-index: 9;
+    cursor: unset;
 }
 .site-protect{
     stroke: red;
     fill: orangered;
     fill-opacity: 0;
-    z-index: 10;
 }
 
 .off-layer{
     display: none !important;
+}
+
+.leaflet-popup-content-wrapper, .leaflet-popup-tip, .leaflet-popup-close-button span{
+    background-color: var(--primary-color);
+    color: var(--text-color);
+    text-align: center;
 }
