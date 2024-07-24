@@ -64,7 +64,8 @@
 
 
     .colorBox {
+        border-radius: 1rem;
         width: 20px;
         height: 20px;
-        border: 1px solid black;
+        border: 0.5px solid white;
     }

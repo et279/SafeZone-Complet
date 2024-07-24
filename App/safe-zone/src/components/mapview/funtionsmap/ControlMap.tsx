@@ -6,8 +6,10 @@ import './ControlMap.css';
 const MapVisualControl = () => {
     // Estado para controlar la activación de las diferentes capas
   const [protectedSitesActive, setProtectedSitesActive] = useState(true);
+  const [protectedZonesInactive, setProtectedZonesInactive] = useState(true);
   const [protectedZonesActive, setProtectedZonesActive] = useState(true);
   const [allowedZonesActive, setAllowedZonesActive] = useState(false);
+  const [departaments, setDepartments ] = useState (true);
 
     // Función para alternar la clase en los elementos y el estado del botón
   const toggleClass = (targetClass: string, setState: React.Dispatch<React.SetStateAction<boolean>>) => {
@@ -64,6 +66,25 @@ const MapVisualControl = () => {
           </Col>
         </Row>
       </div>
+      {/* Control para Zonas Protegidas Inactivas*/}
+      <div className='layer'>
+        <Row>
+          <Col> 
+            <span className='label'>Zonas protegidas inactivas</span>
+          </Col>
+          <Col>
+            <Button 
+              onClick={() => toggleClass('zone-inactive', setProtectedZonesInactive)}
+              className={`toggle-btn ${protectedZonesInactive ? "toggled" : ""}`}
+            >
+              <div className='thumb'></div>
+            </Button>
+          </Col>
+          <Col style={{textAlign: 'right'}}>
+            <div style={{backgroundColor: 'gray'}} className='colorBox'></div>
+          </Col>
+        </Row>
+      </div>
        {/* Control para Zonas Permitidas */}
       <div className='layer'>
         <Row>
@@ -80,6 +101,25 @@ const MapVisualControl = () => {
           </Col>
           <Col style={{textAlign: 'right'}}>
             <div style={{backgroundColor: 'green'} } className='colorBox'></div>
+          </Col>
+        </Row>
+      </div>
+      {/* Control para Limite departamentos */}
+      <div className='layer'>
+        <Row>
+          <Col> 
+            <span className='label'>Limite departamento</span>
+          </Col>
+          <Col>
+            <Button 
+              className={`toggle-btn ${departaments ? "toggled" : ""}`}
+              onClick={() => toggleClass('city-limit', setDepartments)}
+            >
+              <div className='thumb'></div>
+            </Button>
+          </Col>
+          <Col style={{textAlign: 'right'}}>
+            <div style={{backgroundColor: 'transparent'} } className='colorBox'></div>
           </Col>
         </Row>
       </div>

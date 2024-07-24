@@ -6,8 +6,21 @@
 }
 .site-protect{
     stroke: red;
+    stroke-width: 0.7px;
     fill: orangered;
-    fill-opacity: 0;
+    fill-opacity: 0.3;
+}
+.zone-inactive {
+    fill: gray;
+    fill-opacity: 0.1;
+    stroke-width: 0.5px;
+    stroke: gray;
+}
+.city-limit{
+    fill: transparent;
+    stroke-width: 1px;
+    stroke: red;
+    stroke-linecap: butt;
 }
 
 .off-layer{

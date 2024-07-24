@@ -7,9 +7,10 @@ import './PoligonMap.css';
 import { POLYGON_ENVIGADO } from '../../types/Variables'
 
 const PolygonMap: React.FC = () => {
-  const [polygons, setPolygons] = useState<{ name: string; coordinates: number[][]; restriction: Restriction; coordinatesrestriction: number[][] }[]>([]);
+  const [polygons, setPolygons] = useState<{ name: string; coordinates: number[][]; restriction: Restriction; coordinatesrestriction: number[][]; isActive: boolean }[]>([]);
   const [unifiedPolygon, setUnifiedPolygon] = useState<number[][]>([]);
   const [error, setError] = useState<string | null>(null);
+
 
   useEffect(() => {
     const loadPolygons = async () => {
@@ -21,8 +22,7 @@ const PolygonMap: React.FC = () => {
       
         
         const unified = unifyPolygons(zones);
-        
-        setUnifiedPolygon(unified);
+
 
         console.log('completo todo');
       } catch (error) {
@@ -62,11 +62,19 @@ console.log(unifiedPolygon);
 
   return (
     <div>
+      <React.Fragment >
+        <Polygon positions={POLYGON_ENVIGADO} className='city-limit'>
+        </Polygon>
+      </React.Fragment>
       {polygons.map((polygon, index) => (
         <React.Fragment key={index}>
-          <Polygon positions={polygon.coordinatesrestriction} className='zone-protect' />
-          <Polygon positions={polygon.coordinates} className='site-protect'>
-            <Popup>{polygon.name}</Popup>
+          <Polygon 
+            positions={polygon.coordinatesrestriction} 
+            className={polygon.isActive ? 'zone-protect' : 'zone-inactive'}/>
+          <Polygon 
+            positions={polygon.coordinates} 
+            className='site-protect'>
+              <Popup>{polygon.name}</Popup>
           </Polygon>
         </React.Fragment>
       ))}
@@ -74,11 +82,8 @@ console.log(unifiedPolygon);
         <Polygon positions={unifiedPolygon} className='unified-zone' />
       )}
       {error && <div className="error-message">{error}</div>}
-      <Polygon positions={polygonWithHoles} color="blue" />
-      {/* <React.Fragment >
-        <Polygon positions={POLYGON_ENVIGADO} className='city-limit'>
-        </Polygon>
-      </React.Fragment> */}
+      
+      
       
     </div>
   );
