@@ -13,6 +13,14 @@ const App: React.FC = () => {
 
   const [theme, setTheme] = useState('dark');
   useEffect(() => {
+    if (navigator.geolocation) { 
+      navigator.permissions.query({ name: "geolocation" }).then(function (result) { 
+        console.log(result); 
+      }); } else { 
+        console.log("Geolocation is not supported by this browser.");
+      }
+      if (navigator.geolocation) { navigator.permissions .query({ name: "geolocation" }) .then(function (result) { console.log(result); }); } else { console.log("Geolocation is not supported by this browser."); }
+
     document.body.setAttribute('data-theme', theme);
   }, [theme]);
 
@@ -30,6 +38,7 @@ const App: React.FC = () => {
           <Route path="/" element={<MapView />} />
           {/* Agrega más rutas aquí para otras funcionalidades administrativas */}
         </Routes>
+        
       </Container>
     </Router>
   );

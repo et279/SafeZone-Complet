@@ -1,4 +1,5 @@
-    
+
+
     /* Alineacion de contenidos */
     .control-layer .col {
         align-content: center;
@@ -68,4 +69,13 @@
         width: 20px;
         height: 20px;
         border: 0.5px solid white;
+    }
+    .markerme-icon{
+        border: 0;
+    } 
+    .markerme-icon img{
+        
+        width: 150%;
+        margin-top: -50%;
+        margin-left: -40%;
     }

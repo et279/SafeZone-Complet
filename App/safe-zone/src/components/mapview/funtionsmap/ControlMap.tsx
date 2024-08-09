@@ -2,10 +2,12 @@
 import { useState } from 'react';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import './ControlMap.css';
+import {iconUrl} from './../../../styles/Map';
 
 const MapVisualControl = () => {
     // Estado para controlar la activación de las diferentes capas
   const [protectedSitesActive, setProtectedSitesActive] = useState(true);
+  const [miUbicacion, setmiUbicacion] = useState(true);
   const [protectedZonesInactive, setProtectedZonesInactive] = useState(true);
   const [protectedZonesActive, setProtectedZonesActive] = useState(true);
   const [allowedZonesActive, setAllowedZonesActive] = useState(false);
@@ -44,6 +46,28 @@ const MapVisualControl = () => {
           </Col>
           <Col style={{textAlign: 'right'}}>
             <div style={{backgroundColor: 'red'}} className='colorBox'></div>
+          </Col>
+        </Row>
+      </div>
+      {/* Control para Ubicacion Usuario*/}
+      <div className='layer'>
+        <Row>
+          <Col> 
+            <span className='label'>Mi ubicacion</span>
+          </Col>
+          <Col className='col-control-layer'>
+            <Button 
+              id='miubicacion'
+              className={`toggle-btn ${miUbicacion ? "toggled" : ""}`}
+              onClick={() => toggleClass('markerme', setmiUbicacion)}
+            >
+              <div className='thumb'></div>
+            </Button>
+          </Col>
+          <Col style={{textAlign: 'right'}}>
+            <div className='colorBox markerme-icon'>
+              <img src={iconUrl} alt="" />
+            </div>
           </Col>
         </Row>
       </div>

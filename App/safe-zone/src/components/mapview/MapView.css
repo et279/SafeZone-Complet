@@ -91,3 +91,9 @@
 .leaflet-control-extra-buttons a:hover {
   background-color: #0056b3;
 }
+
+.markerme{
+  background-color: transparent;
+  border: 0;
+  width: 35px;
+}
