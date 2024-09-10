@@ -1,6 +1,6 @@
 import * as turf from '@turf/turf';
 import { Feature, GeoJsonProperties, Polygon as GeoJsonPolygon, MultiPolygon as GeoJsonMultiPolygon } from 'geojson';
-import { Restriction, Zone } from './Zone';
+import { Restriction, Site } from './Site';
 import api from '../services/api';
 import { POLYGON_ENVIGADO } from '../types/Variables'
 
@@ -31,9 +31,9 @@ export const isZoneActive = (restriction: Restriction): boolean =>{
 }
 
 // Función para obtener las zonas desde la base de datos
-export const fetchZones = async (): Promise<Zone[]> => {
+export const fetchZones = async (): Promise<Site[]> => {
   try {
-    const response = await api.get('zones');
+    const response = await api.get('sites/active');
     return response.data;
   } catch (error) {
     console.error('Error fetching zones:', error);
@@ -41,7 +41,7 @@ export const fetchZones = async (): Promise<Zone[]> => {
   }
 };
 // Función para generar polígonos a partir de las zonas
-export const generatePolygons = (zones: Zone[]) => {
+export const generatePolygons = (zones: Site[]) => {
   
   return zones.map(zone => ({
     name: zone.name,
@@ -54,7 +54,7 @@ export const generatePolygons = (zones: Zone[]) => {
 
 
 // Función para unir los polígonos superpuestos
-export const unifyPolygons = (zones: Zone[]) => {
+export const unifyPolygons = (zones: Site[]) => {
   const turfPolygons = zones.map(zone =>
     turf.polygon([zone.coordinatesrestriction.map(coord => [coord.lng, coord.lat])])
   );

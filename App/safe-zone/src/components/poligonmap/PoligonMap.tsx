@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Polygon, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { fetchZones, generatePolygons, unifyPolygons} from '../../types/polygonLogic';
-import { Restriction, Zone } from '../../types/Zone';
+import { one } from '../../types/Site';
 import './PoligonMap.css';
 import { POLYGON_ENVIGADO } from '../../types/Variables'
 
@@ -14,7 +14,7 @@ const PolygonMap: React.FC = () => {
 
   useEffect(() => {
     const loadPolygons = async () => {
-      try {
+      try { 
         const zones: Zone[] = await fetchZones();
         const generatedPolygons = generatePolygons(zones);
         setPolygons(generatedPolygons);

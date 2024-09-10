@@ -1,0 +1,7 @@
+﻿name;restrictionId;version;isActive;createdAt;updateAt
+Ludoteca;667a4a4d0cc99ae2fa6ed6bd;1;true;2024-08-24T10:00:00Z;2024-08-24T10:00:00Z
+CentroEducativo;667a4a900cc99ae2fa6ed6c1;1;true;2024-08-24T10:00:00Z;2024-08-24T10:00:00Z
+Centro Deportivo;667a4aaf0cc99ae2fa6ed6c3;1;true;2024-08-24T10:00:00Z;2024-08-24T10:00:00Z
+Zona Historica;667a50110cc99ae2fa6ed6de;1;true;2024-08-24T10:00:00Z;2024-08-24T10:00:00Z
+Espacio Publico;667a50320cc99ae2fa6ed6e0;1;true;2024-08-24T10:00:00Z;2024-08-24T10:00:00Z
+Centro de Atencion Medica;667a50a30cc99ae2fa6ed6e3;1;true;2024-08-24T10:00:00Z;2024-08-24T10:00:00Z

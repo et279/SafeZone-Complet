@@ -1,12 +1,30 @@
 const mongoose = require('mongoose');
 
 const SiteTypeSchema = new mongoose.Schema({
-  name: { type: String, required: true, unique: true }, // Asegurarse de que el campo name sea único y requerido
-  radius: { type: Number, required: true },
-  restriction: {
-    days: { type: [String], required: true },
-    startHour: { type: String, required: true },
-    endHour: { type: String, required: true },
+  name: {
+    type: String,
+    required: true,
+  },
+  categoryId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'SiteCategory',
+    required: true,
+  },
+  version: {
+    type: Number,
+    default: 1,
+  },
+  isActive: {
+    type: Boolean,
+    default: true,
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
+  updatedAt: {
+    type: Date,
+    default: Date.now,
   },
 });
 

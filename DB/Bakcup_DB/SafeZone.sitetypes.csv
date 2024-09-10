@@ -1,0 +1,7 @@
+_id,name,radius,restriction.days[0],restriction.days[1],restriction.days[2],restriction.days[3],restriction.days[4],restriction.days[5],restriction.days[6],restriction.startHour,restriction.endHour,__v
+667a4a4d0cc99ae2fa6ed6bd,Ludoteca,80,Martes,Lunes,Miércoles,Jueves,Viernes,Sábado,Domingo,05:00,23:59,0
+667a4a900cc99ae2fa6ed6c1,Centro Educativo,100,Lunes,Martes,Miércoles,Jueves,Viernes,Domingo,Sábado,05:00,22:00,0
+667a4aaf0cc99ae2fa6ed6c3,Centro Deportivo,100,Lunes,Martes,Viernes,Sábado,Domingo,Miércoles,Jueves,05:00,22:00,0
+667a50110cc99ae2fa6ed6de,Zona Historica,80,Lunes,Martes,Miércoles,Jueves,Viernes,Sábado,Domingo,05:00,23:59,0
+667a50320cc99ae2fa6ed6e0,Espacio Publico,80,Lunes,Martes,Miércoles,Jueves,Viernes,Sábado,Domingo,05:00,23:59,0
+667a50a30cc99ae2fa6ed6e3,Hospital,80,Lunes,Martes,Miércoles,Domingo,Sábado,Viernes,Jueves,00:00,23:59,0
