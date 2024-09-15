@@ -1,13 +1,11 @@
-/* Contenedor global de la aplicación */
 /* Estilos del menú lateral */
 .menu {
   background-color: var(--background-color);
   padding: 20px 0;
   width: 80px;
-  height: 100vh;
+  height: 100%;
   display: flex;
   flex-direction: column;
-  align-items: center;
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
   justify-content: space-between;
 }
@@ -29,11 +27,14 @@
   margin: 0;
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 20px;
 }
 
 /* Cada ítem del menú */
 .menu-item {
+  background: none;
+  border: none;
   cursor: pointer;
   transition: background-color 0.3s ease;
   display: flex;
@@ -43,8 +44,12 @@
   width: 50px;
   height: 50px;
   transition: 0.5s;
-}
 
+}
+.menu-item.inactive {
+  cursor: not-allowed;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Sombra suave */
+}
 /* Iconos de los ítems */
 .menu-icon {
   font-size: 30px;

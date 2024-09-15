@@ -6,90 +6,80 @@
   padding: 0;
   text-align: center;
 }
-
-.b-w-button{
-  position: fixed;
-  bottom: 1rem;
-  right: 10px;
-  z-index: 1000;
-}
-.on{
-  fill: ghostwhite;
-}
-.off{
-  fill: black;
-}
-
-
-/* Contenedor global */
+/* Contenedor principal */
 .app-container {
   display: flex;
   height: 100vh;
-  width: 100vw;
+  background-color: var(--background-color);
 }
 
-/* Estilos para el menú */
+/* Menú a la izquierda */
 .menu-container {
-  width: auto;  
-  background-color: #f0f0f0;
-}
-
-/* Contenedor derecho */
-.right-container {
-  flex-grow: 1;
+  background-color: var(--primary-color);
   display: flex;
   flex-direction: column;
-  padding: 20px;
+  justify-content: space-between;
+}
+
+/* Contenedor derecho (para la cuadrícula y los componentes) */
+.right-container {
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
   transition: all 0.3s ease;
 }
 
+/* Estado cuando un componente está en pantalla completa */
 .right-container.fullscreen {
+  width: 100%;
+  height: 100vh;
   padding: 0;
-  overflow: hidden;
 }
 
-/* Contenido principal */
+/* Contenedor principal de la cuadrícula */
 .main-content {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  gap: 1rem;
   height: 100%;
 }
 
+/* Contenedores individuales de la cuadrícula */
 .component-container {
-  display: flex;
-  margin-bottom: 10px;
-  transition: all 0.3s ease;
-  width: 50%;
-  height: 40vh;
-  margin: 0;
+  background-color: var(--secondary-color);
+  border-radius: var(--cont-border-rad);
   padding: 0;
+  box-shadow: 0 4px 8px var(--sahdow-style);
+  transition: all 0.3s ease;
+  position: relative;
 }
 
+/* Componente expandido a pantalla completa */
 .component-container.expanded {
-  flex-grow: 2; /* Este valor puede ajustarse para hacer que el componente crezca */
+  grid-column: 1 / -1;
+  grid-row: 1 / -1;
   width: 100%;
-  height: 100vh;
+  height: 100%;
+  margin: 0;
+  border-radius: 0;
+  transition: 1s;
 }
 
-/* Estilos para el mapa */
-.map-container {
-  background-color: #e0e0e0;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
+/* Ocultar componentes no expandidos cuando uno está en fullscreen */
+.hidden {
+  display: none;
 }
 
-.extra-content {
-  margin-top: 20px;
-  background-color: #d9f7be;
-  padding: 10px;
-  border-radius: 8px;
-}
-
-/* Estilos para el componente de información */
-.info-container {
-  background-color: #f0f0f0;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
+/* Botón de full screen */
+.fullscreen-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: var(--primary-color);
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 50%;
 }

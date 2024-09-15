@@ -1,9 +1,7 @@
 /* Estilo para el contenedor de los controles de zoom */
 /* Estilos para el mapa */
 .map-container {
-  background-color: #e0e0e0;
-  padding: 10px;
-  border: 1px solid #ccc;
+  padding: 0px;
   border-radius: 8px;
   width: 100%;
   height: 100%;
@@ -16,9 +14,7 @@
 
 .extra-content {
   margin-top: 20px;
-  background-color: #d9f7be;
-  padding: 10px;
-  border-radius: 8px;
+  padding: 10px;  
 }
 
 .leaflet-control-zoom.leaflet-bar.leaflet-control {
