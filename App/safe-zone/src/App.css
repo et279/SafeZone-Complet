@@ -11,65 +11,114 @@
   display: flex;
   height: 100vh;
   background-color: var(--background-color);
+  overflow: hidden;
 }
 
 /* Menú a la izquierda */
 .menu-container {
-  background-color: var(--primary-color);
+  width: 7%;
+  background-color: var(--background-color);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  align-items: center;  
 }
 
 /* Contenedor derecho (para la cuadrícula y los componentes) */
 .right-container {
-  width: 90%;
+  width: 93%;
+  min-width: auto;
   display: flex;
   flex-direction: column;
-  padding: 1rem;
+  padding: 0 1rem 1rem;
   transition: all 0.3s ease;
 }
 
-/* Estado cuando un componente está en pantalla completa */
-.right-container.fullscreen {
-  width: 100%;
-  height: 100vh;
-  padding: 0;
-}
+
 
 /* Contenedor principal de la cuadrícula */
 .main-content {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  grid-template-rows: repeat(2, 1fr);
   gap: 1rem;
+  width: 100%;
   height: 100%;
-}
+  grid-template-areas: 
+    "header header header header"
+    "map map map user"     /* El mapa ocupa toda la primera fila */
+    "data data data2 user";  /* Datos a la izquierda y usuario a la derecha en la segunda fila */
+  
+    transition: 0.5s;
+  }
 
+.fullscreen .main-content.map{
+  grid-template-areas:
+  "header header header header"
+  "map map map map";
+}
+.fullscreen .main-content.info{
+  grid-template-areas:
+  "header header header header"
+  "info info info info";
+}
+.fullscreen .main-content.info2{
+  grid-template-areas:
+  "header header header header"
+  "info2 info2 info2 info2";
+}
+/* Contenedor del Header */
+.header{
+  grid-area: header;
+  width: 100%;
+  max-height: 70px;
+  height: 7vh;
+}
 /* Contenedores individuales de la cuadrícula */
 .component-container {
   background-color: var(--secondary-color);
   border-radius: var(--cont-border-rad);
   padding: 0;
   box-shadow: 0 4px 8px var(--sahdow-style);
-  transition: all 0.3s ease;
   position: relative;
+  border-radius: 10px;
+
+}
+.component-container#map{
+  grid-area: map; /* Mapea esta sección a la zona 'map' definida en grid-template-areas */
+  
+  overflow: hidden;
+  height: 43vh;
+}
+.component-container#data{
+  grid-area: data; /* Mapea esta sección a la zona 'map' definida en grid-template-areas */
+  
+  overflow: hidden;
+  width: 100%;
+  height: 40vh;
+}
+.component-container#data2{
+  grid-area: data2; /* Mapea esta sección a la zona 'map' definida en grid-template-areas */
+  overflow: hidden;
+  width: 100%;
+  height: 40vh;
+}
+.component-container#user{
+  grid-area: user; /* Mapea esta sección a la zona 'map' definida en grid-template-areas */
+  overflow: hidden;
+  width: 100%;
 }
 
 /* Componente expandido a pantalla completa */
 .component-container.expanded {
-  grid-column: 1 / -1;
-  grid-row: 1 / -1;
   width: 100%;
-  height: 100%;
+  height: 87vh !important;
   margin: 0;
-  border-radius: 0;
-  transition: 1s;
 }
 
 /* Ocultar componentes no expandidos cuando uno está en fullscreen */
 .hidden {
   display: none;
+  transition: 0.5s;
+  
 }
 
 /* Botón de full screen */

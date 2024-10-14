@@ -5,21 +5,22 @@ import React from 'react';
 import { FaHome, FaMapMarkerAlt, FaChartBar, FaCog, FaUser } from 'react-icons/fa'; // Usa íconos de react-icons
 
 interface MenuProps {
-  onMenuClick: (componentName: string) => void;
+  toggleFullScreen: (componentName: string | null) => void;
+  isFullScreen: boolean
   activeComponent: string | null;
 }
 
-const Menu: React.FC<MenuProps> = ({ onMenuClick, activeComponent }) => {
+const Menu: React.FC<MenuProps> = ({ toggleFullScreen, isFullScreen, activeComponent }) => {
   return (
     <div className="menu">
       <div className="menu-logo">
         <img src={logo} alt="Logo" className="logo" /> {/* Logo de la app */}
       </div>
       <div className='menu-items'>
-        <button  className={`menu-item ${activeComponent === 'home' ? 'inactive' : ''}`} onClick={() => onMenuClick('home')}>
+        <button  className={`menu-item ${activeComponent === null ? 'active' : ''}`} onClick={() =>toggleFullScreen(null)}>
             <FaHome className="menu-icon" />
         </button >
-        <button className={`menu-item ${activeComponent === 'map' ? 'inactive' : ''}`}  onClick={() => onMenuClick('map')}>
+        <button className={`menu-item ${activeComponent === 'map' ? 'active' : ''}`}  onClick={() => toggleFullScreen('map')}>
             <FaMapMarkerAlt className="menu-icon" />
         </button>
         <button className="menu-item">
@@ -27,10 +28,10 @@ const Menu: React.FC<MenuProps> = ({ onMenuClick, activeComponent }) => {
         </button>
       </div>
       <ul className="menu-items">
-        <li className="menu-item" onClick={() => onMenuClick('settings')}>
+        <li className="menu-item" onClick={() => toggleFullScreen('settings')}>
           <FaCog className="menu-icon" />
         </li>
-        <li className="menu-item" onClick={() => onMenuClick('profile')}>
+        <li className="menu-item" onClick={() => toggleFullScreen('profile')}>
           <FaUser className="menu-icon" />
         </li>
         

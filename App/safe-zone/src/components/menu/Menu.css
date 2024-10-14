@@ -1,12 +1,12 @@
 /* Estilos del menú lateral */
 .menu {
-  background-color: var(--background-color);
+  background-color: transparent;
   padding: 20px 0;
-  width: 80px;
+  width: 100%;
+  min-width: 80px;
   height: 100%;
   display: flex;
   flex-direction: column;
-  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
   justify-content: space-between;
 }
 
