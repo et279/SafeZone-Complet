@@ -7,6 +7,7 @@ import Header from '@components/header/Header';
 import User from '@components/user/User';
 import './App.css';
 import { ThemeProvider } from './context/ThemeContext';
+import Dashboard from './pages/dashboard/Dashboard';
 
 const App: React.FC = () => {
   
@@ -43,23 +44,11 @@ const App: React.FC = () => {
             <div className={`main-content`}>
 
             <Routes>
-            <Route path="/" element={<SitesComponent />} />
+              <Route path="/" element={<Dashboard />} />
               <Route path="/map" element={<MapComponent />} />
+              <Route path='/user' element={<User />}/>
+              <Route path="/sites" element={<SitesComponent />} />
             </Routes>
-              {/* Cuadrícula de componentes */}
-              <div id='map' className={`component-container expanded`}>
-                <MapComponent/>
-              </div>
-              <div id='user' className={`component-container hidden`}>
-                <User />
-              </div>
-              <div id='data' className={`component-container expanded`}>
-                <SitesComponent />
-              </div>
-              <div id='data2' className={`component-container expanded`}>
-                <SitesComponent />
-              </div>
-              {/* Puedes agregar más componentes aquí siguiendo el mismo patrón */}
             </div>
           </div>
 
