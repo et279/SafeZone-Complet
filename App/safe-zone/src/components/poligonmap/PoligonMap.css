@@ -1,0 +1,34 @@
+.zone-protect{
+    stroke: unset;
+    fill: orangered;
+    fill-opacity: .3;
+    cursor: unset;
+}
+.site-protect{
+    stroke: red;
+    stroke-width: 0.7px;
+    fill: orangered;
+    fill-opacity: 0.3;
+}
+.zone-inactive {
+    fill: gray;
+    fill-opacity: 0.1;
+    stroke-width: 0.5px;
+    stroke: gray;
+}
+.city-limit{
+    fill: transparent;
+    stroke-width: 1px;
+    stroke: red;
+    stroke-linecap: butt;
+}
+
+.off-layer{
+    display: none !important;
+}
+
+.leaflet-popup-content-wrapper, .leaflet-popup-tip, .leaflet-popup-close-button span{
+    background-color: var(--primary-color);
+    color: var(--text-color);
+    text-align: center;
+}

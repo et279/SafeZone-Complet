@@ -2,13 +2,7 @@ export interface Site {
     _id: string;
     name: string;
     coordinates: { lat: number; lng: number }[];
-    radius: number;
-    type: string;
-    restriction: {
-      days: string[];
-      startHour: string;
-      endHour: string;
-    };
+    type: SiteType;
     coordinatesrestriction: { lat: number; lng: number }[];
   }
   
@@ -16,5 +10,17 @@ export interface Site {
     coordinates: [number, number][];
     color: string;
     siteId?: string;
+  }
+
+  export interface Restriction {
+    days: string[];
+    startHour: string;
+    endHour: string;
+  }
+  
+  export interface SiteType {
+    name: string;
+    radius: number;
+    restriction: Restriction;
   }
   

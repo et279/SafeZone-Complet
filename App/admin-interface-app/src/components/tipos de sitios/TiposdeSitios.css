@@ -1,0 +1,12 @@
+.cont-body{
+    padding: 5vh;
+    min-height: 90vh;
+    max-height: 94vh;
+}
+
+.btn-frm{
+    width: 40%;
+}
+input {
+    border-radius: 1em !important;
+}

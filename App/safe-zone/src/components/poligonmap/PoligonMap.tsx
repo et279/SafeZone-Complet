@@ -1,40 +1,91 @@
 import React, { useEffect, useState } from 'react';
-import { Polygon, Popup} from 'react-leaflet';
+import { Polygon, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
-import { fetchZones, generatePolygons } from '../../types/polygonLogic';
-import { Coordinate, Restriction, Zone, } from '../../types/Zone';
-import * as turf from '@turf/turf';
-
-
+import { fetchZones, generatePolygons, unifyPolygons} from '../../types/polygonLogic';
+import { one } from '../../types/Site';
+import './PoligonMap.css';
+import { POLYGON_ENVIGADO } from '../../types/Variables'
 
 const PolygonMap: React.FC = () => {
-  const [polygons, setPolygons] = useState<{ name: string; coordinates: number[][];    restriction: Restriction;  coordinatesrestriction: number[][] }[]>([]);
+  const [polygons, setPolygons] = useState<{ name: string; coordinates: number[][]; restriction: Restriction; coordinatesrestriction: number[][]; isActive: boolean }[]>([]);
+  const [unifiedPolygon, setUnifiedPolygon] = useState<number[][]>([]);
+  const [error, setError] = useState<string | null>(null);
+
 
   useEffect(() => {
     const loadPolygons = async () => {
-      const zones: Zone[] = await fetchZones();
-      const generatedPolygons = generatePolygons(zones);
-      setPolygons(generatedPolygons);
-      console.log(zones);
+      try { 
+        const zones: Zone[] = await fetchZones();
+        const generatedPolygons = generatePolygons(zones);
+        setPolygons(generatedPolygons);
+        console.log('genero poligonos');
+      
+        
+        const unified = unifyPolygons(zones);
+
+
+        console.log('completo todo');
+      } catch (error) {
+        console.error('Error loading polygons:', error);
+        setError('An error occurred while loading polygons.');
+      }
     };
 
     loadPolygons();
   }, []);
-//   console.log('poligons',polygons);
+// Definir los puntos del polígono con huecos
+const polygonWithHoles = [
+  [
+    [6.1889, -75.5832474], // Contorno exterior
+    [6.1889801, -75.5833107],
+    [6.1886445, -75.583491],
+    [6.1883309, -75.583671],
+    [6.188069, -75.5838719],
+    [6.1876799, -75.5842998],
+    [6.1871288, -75.5850199],
+    [6.1867403, -75.5855474],
+    [6.1861331, -75.5863644],
+    [6.185522, -75.5872179],
+    [6.1853345, -75.5874469],
+    [6.1889, -75.5832474], // Cerrar el contorno exterior
+  ],
+  [
+    [6.1885, -75.5840], // Hueco interior
+    [6.1886, -75.5841],
+    [6.1887, -75.5842],
+    [6.1885, -75.5840], // Cerrar el hueco interior
+  ],
+];
+console.log(polygonWithHoles);
+console.log(unifiedPolygon);
 
 
   return (
-          polygons.map((polygon, index) => (
-            <React.Fragment key={index}>
-                <Polygon positions={polygon.coordinatesrestriction} pathOptions={{ color: 'blue' }} />
-                <Polygon key={index} positions={polygon.coordinates} pathOptions={{ color: 'red' }}>
-                    <Popup>{polygon.name}
-                    <br>
-                    </br></Popup>   
-                </Polygon>
-            </React.Fragment>
-          ))
+    <div>
+      <React.Fragment >
+        <Polygon positions={POLYGON_ENVIGADO} className='city-limit'>
+        </Polygon>
+      </React.Fragment>
+      {polygons.map((polygon, index) => (
+        <React.Fragment key={index}>
+          <Polygon 
+            positions={polygon.coordinatesrestriction} 
+            className={polygon.isActive ? 'zone-protect' : 'zone-inactive'}/>
+          <Polygon 
+            positions={polygon.coordinates} 
+            className='site-protect'>
+              <Popup>{polygon.name}</Popup>
+          </Polygon>
+        </React.Fragment>
+      ))}
+      {unifiedPolygon.length > 0 && (
+        <Polygon positions={unifiedPolygon} className='unified-zone' />
+      )}
+      {error && <div className="error-message">{error}</div>}
       
+      
+      
+    </div>
   );
 };
 

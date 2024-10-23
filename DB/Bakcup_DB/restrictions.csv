@@ -1,0 +1,7 @@
+﻿_id;radius;daysApplicable;timeRange.start;timeRange.end;createdAt;updatedAt
+667a4a4d0cc99ae2fa6ed6bd;80;['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'];5:00:00;23:59:00;2024-08-24T10:00:00Z;2024-08-24T10:00:00Z
+667a4a900cc99ae2fa6ed6c1;100;['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'];5:00:00;22:00:00;2024-08-24T10:00:00Z;2024-08-24T10:00:00Z
+667a4aaf0cc99ae2fa6ed6c3;100;['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'];5:00:00;22:00:00;2024-08-24T10:00:00Z;2024-08-24T10:00:00Z
+667a50110cc99ae2fa6ed6de;80;['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'];5:00:00;23:59:00;2024-08-24T10:00:00Z;2024-08-24T10:00:00Z
+667a50320cc99ae2fa6ed6e0;80;['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'];5:00:00;23:59:00;2024-08-24T10:00:00Z;2024-08-24T10:00:00Z
+667a50a30cc99ae2fa6ed6e3;80;['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'];0:00:00;23:59:00;2024-08-24T10:00:00Z;2024-08-24T10:00:00Z
