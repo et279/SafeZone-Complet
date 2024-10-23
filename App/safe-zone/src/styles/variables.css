@@ -4,8 +4,10 @@
     --secondary-color: #6c757d;
     --background-color: #ffffff;
     --text-color: #000000;
+    --text-color-disactive: #616161;
     --aprove-color: #008000;
     --sahdow-style: #ebebeb;
+    --border-color: #323a49;
  
     /* Fuentes */
     --font-size-title: 2rem;
@@ -32,7 +34,9 @@
     --secondary-color: #444;
     --background-color: #343a40;
     --text-color: #ffffff;
+    --text-color-disactive: #949494;
     --sahdow-style: #3b5f86;
+    --border-color: #dbdfe6;
   }
   
   

@@ -30,7 +30,7 @@
   min-width: auto;
   display: flex;
   flex-direction: column;
-  padding: 0 1rem 1rem;
+  padding: 0;
   transition: all 0.3s ease;
 }
 

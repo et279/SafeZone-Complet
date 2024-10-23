@@ -58,9 +58,9 @@
 }
 
 /* Efecto hover en los ítems */
-.menu-item:hover {
+.menu-item:hover, .active{
   background-color: var(--secondary-color);
-  transform: scale(1.3);
+  transform: scale(1.05);
   transition: 0.5s;
 }
 .menu-item:hover .menu-icon{

@@ -5,12 +5,19 @@ import {DEFAULT_MAP_ZOOM, DEFAULT_MAP_CENTER } from '../../types/Variables';
 import './MapComponent.css';
 import { useEffect, useState } from 'react';
 import { iconPerson } from '../../styles/Map';
+import { useTheme } from '../../context/ThemeContext';
 
+const MAPBOX_ACCESS_TOKEN = 'pk.eyJ1IjoiZ2FsYTIwMjQiLCJhIjoiY20ybGNlc3djMGFwZTJqbjRvbDM2b2k0aSJ9.mdeV4dffFRh4hL9L3kG2qA'; // Coloca tu token de Mapbox aquí
+const LIGHT_MAP_STYLE = 'mapbox/light-v10'; // Reemplaza con el ID de tu estilo light
+const DARK_MAP_STYLE = 'mapbox/dark-v10'; // Reemplaza con el ID de tu estilo dark
 
-const MapComponent: React.FC<{ toggleFullScreen: () => void, isFullScreen: boolean }>=({ toggleFullScreen, isFullScreen}) => {
+const MapComponent: React.FC=() => {
   const [location, setLocation] = useState<{ latitude: number; longitude: number } >(DEFAULT_MAP_CENTER);
   const [error, setError] = useState<string | null>(null);
   const [isUserLocation, setIsUserLocation] = useState<boolean>(false);
+  const { theme } = useTheme();
+
+  const mapStyle = theme === 'dark' ? DARK_MAP_STYLE : LIGHT_MAP_STYLE;
 
 
   const getUserLocation = () => {
@@ -40,13 +47,9 @@ const MapComponent: React.FC<{ toggleFullScreen: () => void, isFullScreen: boole
 
   return (
     <div className="map-container">
-      <button onClick={toggleFullScreen}>
-        {isFullScreen ? 'Salir de Pantalla Completa' : 'Pantalla Completa'}
-      </button>
-      
       {/* Contenido normal */}
       <MapContainer center={[location.latitude, location.longitude]} zoom={DEFAULT_MAP_ZOOM} style={{ height: "100%", width: "100%", zIndex:0 }} >
-        <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"/>
+        <TileLayer url={`https://api.mapbox.com/styles/v1/${mapStyle}/tiles/{z}/{x}/{y}?access_token=${MAPBOX_ACCESS_TOKEN}`} attribution='&copy; <a href="https://www.mapbox.com/about/maps/">Mapbox</a>'/>
           {isUserLocation && (  
             <Marker position={[location.latitude, location.longitude]} icon={iconPerson}>
               <Popup>
@@ -57,13 +60,9 @@ const MapComponent: React.FC<{ toggleFullScreen: () => void, isFullScreen: boole
           {/*llamamos el mapeo de poligonos*/}
         <PolygonMap />
       </MapContainer>
-
-      {/* Contenido adicional que se muestra solo en fullscreen */}
-      {isFullScreen && (
         <div className="extra-content">
           <p>Información adicional del mapa en modo fullscreen</p>
         </div>
-      )}
     </div>
 
     

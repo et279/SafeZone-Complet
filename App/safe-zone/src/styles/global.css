@@ -12,3 +12,6 @@ button, .btn {
   background-color: var(--primary-color);
   color: var(--text-color);
 }
+button, [type=button], [type=reset], [type=submit] {
+  -webkit-appearance: button;
+}
